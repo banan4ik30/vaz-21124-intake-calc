@@ -96,7 +96,7 @@ The tests check the program against reference values, the classic wave-tuning fo
 .\build.ps1
 ```
 
-Output: `dist\VAZ21124-IntakeCalc.exe`. A release with the exe is built automatically when a `v*` tag is pushed.
+Output: `VAZ21124-IntakeCalc.exe` in the project folder (copied from `dist\`). A release with the exe is built automatically when a `v*` tag is pushed.
 
 ## Limitations
 
