@@ -19,7 +19,7 @@ import json
 import math
 import sys
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 # --- физические константы -------------------------------------------------
 R_AIR = 287.05          # Дж/(кг·К), удельная газовая постоянная сухого воздуха
@@ -154,8 +154,100 @@ def normalize(params: dict | None) -> dict:
     return p
 
 
+LANGS = ("ru", "en")
+
+# Тексты выводов и отчёта на двух языках. Плейсхолдеры подставляются через str.format.
+MSG = {
+    "ru": {
+        "peak": "Канал {L:.0f} мм: самый сильный пик ~{rpm} об/мин ({k}-я гармоника{strength}; альт. модель ~{alt}){others}. +10 мм длины сдвигают пик на {sens} об/мин.",
+        "strength": ", сила импульса ~{s} %",
+        "others": "; слабее — {list} об/мин",
+        "no_peak": "Ни одна гармоника (2–6) не попадает в рабочий диапазон оборотов — длина канала не работает на вас.",
+        "v_low": "Скорость в канале на отсечке {v:.0f} м/с — низковата: вялый отклик внизу. Диаметр можно уменьшить до {d0:.0f}–{d1:.0f} мм.",
+        "v_high": "Скорость в канале на отсечке {v:.0f} м/с (M={m:.2f}) — высоко, канал душит верх. Рекомендуемый диаметр {d0:.0f}–{d1:.0f} мм.",
+        "v_ok": "Скорость в канале на отсечке {v:.0f} м/с (M={m:.2f}) — в пределах ориентира {lo:.0f}–{hi:.0f}.",
+        "pl_small": "Ресивер {V:.2f} л = {r:.2f}× рабочего объёма — маловат: цилиндры будут «воровать» воздух друг у друга.",
+        "pl_low": "Ресивер {r:.2f}× рабочего объёма — хороший отклик, акцент на низ/середину.",
+        "pl_mid": "Ресивер {r:.2f}× рабочего объёма — середина/верх, отклик чуть мягче.",
+        "pl_big": "Ресивер {r:.2f}× рабочего объёма — «верховой» объём (как спортивные 3–4 л). С короткими каналами на стоковых валах отклик внизу ухудшится.",
+        "th_high": "Средняя скорость в дросселе на отсечке {v:.0f} м/с — дроссель начинает ограничивать.",
+        "th_ok": "Дроссель {d:.0f} мм: средняя скорость {v:.0f} м/с — запас есть.",
+        "pr_in": "Резонанс ресивера (Гельмгольц) ~{rpm:.0f} об/мин ({hz:.0f} Гц) — небольшая добавка наполнения в этой зоне. Сдвигается объёмом ресивера и трубой до фильтра.",
+        "pr_out": "Резонанс ресивера ~{rpm:.0f} об/мин — вне рабочего диапазона, на езду почти не влияет.",
+        "pick_ok": "Для пика на {t:.0f} об/мин под ваш моторный отсек подходит ~{L} мм ({k}-я гармоника).",
+        "pick_no": "Под {t:.0f} об/мин ни одна длина не укладывается в {a:.0f}–{b:.0f} мм.",
+        "r_title": "IntakeLab {v} — РАСЧЁТ ВПУСКНОГО ТРАКТА (инженерная оценка ±10–15 %)",
+        "r_engine": "Мотор: {B}×{S} мм, {n} цил., {Vd} л, СЖ {cr}",
+        "r_cam": "Фазы впуска: открытие {ivo}° до ВМТ, закрытие {ivc}° после НМТ → {dur}°, EVCD {evcd}°",
+        "r_c": "Скорость звука: {c} м/с ({model}), физическая {cp} м/с",
+        "r_runner": "Канал: {L} мм (седло клапана → вход в ресивер), Ø{D} мм",
+        "r_plenum": "Ресивер: {V} л ({r}× раб. объёма), дроссель Ø{th} мм",
+        "r_inlet": "Труба до фильтра: {L} мм, Ø{D} мм",
+        "r_pres": "Резонанс ресивера (Гельмгольц): {hz} Гц → ~{rpm} об/мин",
+        "r_tuning": "Настройка текущей длины:",
+        "r_harm": "  {k}-я гармоника: {rpm} об/мин (альт. {alt}{s}){mark}",
+        "r_pulse": ", импульс ~{s} %",
+        "r_inrange": " ◄ в диапазоне",
+        "r_sens": "  Чувствительность: +10 мм длины → {s} об/мин",
+        "r_pick": "Подбор длины под {t} об/мин:",
+        "r_pickrow": "  {k}-я гармоника: {L} мм (альт. {alt}){mark}",
+        "r_fits": " ◄ влезает",
+        "r_vel": "Скорость в канале на отсечке: {v} м/с (M = {m}); рекомендуемый Ø {d0}–{d1} мм",
+        "r_flow": "Расход воздуха на отсечке: {f} кг/ч (сравнить с ДМРВ в логах)",
+        "r_th": "Средняя скорость в дросселе: {v} м/с",
+        "r_notes": "Выводы:",
+    },
+    "en": {
+        "peak": "Runner {L:.0f} mm: strongest peak ~{rpm} rpm (harmonic #{k}{strength}; alt. model ~{alt}){others}. +10 mm of length moves the peak by {sens} rpm.",
+        "strength": ", pulse strength ~{s} %",
+        "others": "; weaker ones at {list} rpm",
+        "no_peak": "No harmonic (2nd–6th) falls into the working rpm range — the runner length is not working for you.",
+        "v_low": "Runner velocity at the rev limit is {v:.0f} m/s — rather low: sluggish low-end response. The diameter can be reduced to {d0:.0f}–{d1:.0f} mm.",
+        "v_high": "Runner velocity at the rev limit is {v:.0f} m/s (M={m:.2f}) — high, the runner chokes the top end. Recommended diameter {d0:.0f}–{d1:.0f} mm.",
+        "v_ok": "Runner velocity at the rev limit is {v:.0f} m/s (M={m:.2f}) — within the {lo:.0f}–{hi:.0f} m/s guideline.",
+        "pl_small": "Plenum {V:.2f} L = {r:.2f}× displacement — too small: the cylinders will rob air from each other.",
+        "pl_low": "Plenum {r:.2f}× displacement — good response, emphasis on the low/mid range.",
+        "pl_mid": "Plenum {r:.2f}× displacement — mid/top range, slightly softer response.",
+        "pl_big": "Plenum {r:.2f}× displacement — a top-end volume (like 3–4 L race plenums). With short runners on stock cams the low-end response will suffer.",
+        "th_high": "Mean throttle velocity at the rev limit is {v:.0f} m/s — the throttle starts to restrict.",
+        "th_ok": "Throttle {d:.0f} mm: mean velocity {v:.0f} m/s — there is headroom.",
+        "pr_in": "Plenum (Helmholtz) resonance ~{rpm:.0f} rpm ({hz:.0f} Hz) — a small filling bonus in this area. It is shifted by the plenum volume and the air-filter pipe.",
+        "pr_out": "Plenum resonance ~{rpm:.0f} rpm — outside the working range, it hardly affects driving.",
+        "pick_ok": "For a peak at {t:.0f} rpm, ~{L} mm fits your engine bay (harmonic #{k}).",
+        "pick_no": "For {t:.0f} rpm no length fits into {a:.0f}–{b:.0f} mm.",
+        "r_title": "IntakeLab {v} — INTAKE TRACT CALCULATION (engineering estimate ±10–15 %)",
+        "r_engine": "Engine: {B}×{S} mm, {n} cyl., {Vd} L, CR {cr}",
+        "r_cam": "Intake timing: opens {ivo}° BTDC, closes {ivc}° ABDC → {dur}°, EVCD {evcd}°",
+        "r_c": "Speed of sound: {c} m/s ({model}), physical {cp} m/s",
+        "r_runner": "Runner: {L} mm (valve seat → plenum entry), Ø{D} mm",
+        "r_plenum": "Plenum: {V} L ({r}× displacement), throttle Ø{th} mm",
+        "r_inlet": "Air-filter pipe: {L} mm, Ø{D} mm",
+        "r_pres": "Plenum (Helmholtz) resonance: {hz} Hz → ~{rpm} rpm",
+        "r_tuning": "Tuning of the current length:",
+        "r_harm": "  Harmonic #{k}: {rpm} rpm (alt. {alt}{s}){mark}",
+        "r_pulse": ", pulse ~{s} %",
+        "r_inrange": " ◄ in range",
+        "r_sens": "  Sensitivity: +10 mm of length → {s} rpm",
+        "r_pick": "Length for a peak at {t} rpm:",
+        "r_pickrow": "  Harmonic #{k}: {L} mm (alt. {alt}){mark}",
+        "r_fits": " ◄ fits",
+        "r_vel": "Runner velocity at the rev limit: {v} m/s (M = {m}); recommended Ø {d0}–{d1} mm",
+        "r_flow": "Air flow at the rev limit: {f} kg/h (compare with the MAF reading in ECU logs)",
+        "r_th": "Mean throttle velocity: {v} m/s",
+        "r_notes": "Conclusions:",
+    },
+}
+
+
+def _lang(params: dict | None) -> str:
+    lang = (params or {}).get("lang", "ru")
+    return lang if lang in LANGS else "ru"
+
+
 def compute(params: dict | None = None) -> dict:
     p = normalize(params)
+    lang = _lang(params)
+    M = MSG[lang]
 
     bore = _num(p, "bore_mm") / 1000
     stroke = _num(p, "stroke_mm") / 1000
@@ -259,56 +351,44 @@ def compute(params: dict | None = None) -> dict:
     notes = []
     if main:
         others = ", ".join(f"{t['rpm']}" for t in in_range if t is not main)
-        strength = f", сила импульса ~{main['strength']} %" if main["strength"] else ""
-        notes.append(("ok", f"Канал {L*1000:.0f} мм: самый сильный пик ~{main['rpm']} об/мин "
-                            f"({main['k']}-я гармоника{strength}; альт. модель ~{main['rpm_alt']})"
-                            + (f"; слабее — {others} об/мин." if others else ".")
-                            + f" +10 мм длины сдвигают пик на {sens} об/мин."))
+        notes.append(("ok", M["peak"].format(
+            L=L * 1000, rpm=main["rpm"], k=main["k"], alt=main["rpm_alt"], sens=sens,
+            strength=M["strength"].format(s=main["strength"]) if main["strength"] else "",
+            others=M["others"].format(list=others) if others else "")))
     else:
-        notes.append(("warn", "Ни одна гармоника (2–6) не попадает в рабочий диапазон оборотов — "
-                              "длина канала не работает на вас."))
+        notes.append(("warn", M["no_peak"]))
     lo, hi = RUNNER_V_RANGE
     if v_lim < lo:
-        notes.append(("warn", f"Скорость в канале на отсечке {v_lim:.0f} м/с — низковата: вялый отклик "
-                              f"внизу. Диаметр можно уменьшить до {d_rec[0]:.0f}–{d_rec[1]:.0f} мм."))
+        notes.append(("warn", M["v_low"].format(v=v_lim, d0=d_rec[0], d1=d_rec[1])))
     elif v_lim > hi:
-        notes.append(("warn", f"Скорость в канале на отсечке {v_lim:.0f} м/с (M={mach_lim:.2f}) — высоко, "
-                              f"канал душит верх. Рекомендуемый диаметр {d_rec[0]:.0f}–{d_rec[1]:.0f} мм."))
+        notes.append(("warn", M["v_high"].format(v=v_lim, m=mach_lim, d0=d_rec[0], d1=d_rec[1])))
     else:
-        notes.append(("ok", f"Скорость в канале на отсечке {v_lim:.0f} м/с (M={mach_lim:.2f}) — "
-                            f"в пределах ориентира {lo:.0f}–{hi:.0f}."))
+        notes.append(("ok", M["v_ok"].format(v=v_lim, m=mach_lim, lo=lo, hi=hi)))
     r1, r2, r3 = PLENUM_RATIO
     if ratio < r1:
-        notes.append(("warn", f"Ресивер {plenum_l:.2f} л = {ratio:.2f}× рабочего объёма — маловат: "
-                              "цилиндры будут «воровать» воздух друг у друга."))
+        notes.append(("warn", M["pl_small"].format(V=plenum_l, r=ratio)))
     elif ratio <= r2:
-        notes.append(("ok", f"Ресивер {ratio:.2f}× рабочего объёма — хороший отклик, акцент на низ/середину."))
+        notes.append(("ok", M["pl_low"].format(r=ratio)))
     elif ratio <= r3:
-        notes.append(("info", f"Ресивер {ratio:.2f}× рабочего объёма — середина/верх, отклик чуть мягче."))
+        notes.append(("info", M["pl_mid"].format(r=ratio)))
     else:
-        notes.append(("warn", f"Ресивер {ratio:.2f}× рабочего объёма — «верховой» объём (как спортивные "
-                              "3–4 л). С короткими каналами на стоковых валах отклик внизу ухудшится."))
+        notes.append(("warn", M["pl_big"].format(r=ratio)))
     if th_v_lim > THROTTLE_V_MAX:
-        notes.append(("warn", f"Средняя скорость в дросселе на отсечке {th_v_lim:.0f} м/с — дроссель "
-                              "начинает ограничивать."))
+        notes.append(("warn", M["th_high"].format(v=th_v_lim)))
     else:
-        notes.append(("ok", f"Дроссель {th_d*1000:.0f} мм: средняя скорость {th_v_lim:.0f} м/с — запас есть."))
+        notes.append(("ok", M["th_ok"].format(d=th_d * 1000, v=th_v_lim)))
     if pr_in_range:
-        notes.append(("info", f"Резонанс ресивера (Гельмгольц) ~{pr_rpm:.0f} об/мин ({pr['hz']:.0f} Гц) — "
-                              "небольшая добавка наполнения в этой зоне. Сдвигается объёмом ресивера "
-                              "и трубой до фильтра."))
+        notes.append(("info", M["pr_in"].format(rpm=pr_rpm, hz=pr["hz"])))
     else:
-        notes.append(("info", f"Резонанс ресивера ~{pr_rpm:.0f} об/мин — вне рабочего диапазона, "
-                              "на езду почти не влияет."))
+        notes.append(("info", M["pr_out"].format(rpm=pr_rpm)))
     if best_pick:
-        notes.append(("info", f"Для пика на {target:.0f} об/мин под ваш моторный отсек подходит "
-                              f"~{best_pick['len_mm']} мм ({best_pick['k']}-я гармоника)."))
+        notes.append(("info", M["pick_ok"].format(t=target, L=best_pick["len_mm"], k=best_pick["k"])))
     else:
-        notes.append(("warn", f"Под {target:.0f} об/мин ни одна длина не укладывается в "
-                              f"{pack_min:.0f}–{pack_max:.0f} мм."))
+        notes.append(("warn", M["pick_no"].format(t=target, a=pack_min, b=pack_max)))
 
     return {
         "version": __version__,
+        "lang": lang,
         "params": p,
         "engine": {
             "displacement_l": round(vd_total_l, 3),
@@ -342,41 +422,38 @@ def compute(params: dict | None = None) -> dict:
 
 def report(result: dict) -> str:
     p, e, k = result["params"], result["engine"], result["kpi"]
+    M = MSG[result.get("lang", "ru")]
+    pr = result["plenum_res"]
     lines = [
-        f"IntakeLab {result['version']} — РАСЧЁТ ВПУСКНОГО ТРАКТА (инженерная оценка ±10–15 %)",
-        "=" * 70,
-        f"Мотор: {p['bore_mm']}×{p['stroke_mm']} мм, {p['cylinders']} цил., "
-        f"{e['displacement_l']} л, СЖ {p['cr']}",
-        f"Фазы впуска: открытие {p['ivo_btdc']}° до ВМТ, закрытие {p['ivc_abdc']}° после НМТ "
-        f"→ {e['duration']}°, EVCD {e['evcd']}°",
-        f"Скорость звука: {e['c']} м/с ({p['sound_model']}), физическая {e['c_phys']} м/с",
+        M["r_title"].format(v=result["version"]), "=" * 70,
+        M["r_engine"].format(B=p["bore_mm"], S=p["stroke_mm"], n=p["cylinders"], Vd=e["displacement_l"], cr=p["cr"]),
+        M["r_cam"].format(ivo=p["ivo_btdc"], ivc=p["ivc_abdc"], dur=e["duration"], evcd=e["evcd"]),
+        M["r_c"].format(c=e["c"], model=p["sound_model"], cp=e["c_phys"]),
         "",
-        f"Канал: {p['runner_len_mm']} мм (седло клапана → вход в ресивер), Ø{p['runner_d_mm']} мм",
-        f"Ресивер: {p['plenum_l']} л ({k['plenum_ratio']}× раб. объёма), дроссель Ø{p['throttle_d_mm']} мм",
-        f"Труба до фильтра: {p['inlet_len_mm']} мм, Ø{p['inlet_d_mm']} мм",
-        f"Резонанс ресивера (Гельмгольц): {result['plenum_res']['hz']} Гц → "
-        f"~{result['plenum_res']['rpm']} об/мин",
+        M["r_runner"].format(L=p["runner_len_mm"], D=p["runner_d_mm"]),
+        M["r_plenum"].format(V=p["plenum_l"], r=k["plenum_ratio"], th=p["throttle_d_mm"]),
+        M["r_inlet"].format(L=p["inlet_len_mm"], D=p["inlet_d_mm"]),
+        M["r_pres"].format(hz=pr["hz"], rpm=pr["rpm"]),
         "",
-        "Настройка текущей длины:",
+        M["r_tuning"],
     ]
     for t in result["tuning"]:
-        mark = " ◄ в диапазоне" if t["in_range"] else ""
-        s = f", импульс ~{t['strength']} %" if t["strength"] else ""
-        lines.append(f"  {t['k']}-я гармоника: {t['rpm']} об/мин (альт. {t['rpm_alt']}{s}){mark}")
+        lines.append(M["r_harm"].format(k=t["k"], rpm=t["rpm"], alt=t["rpm_alt"],
+                                        s=M["r_pulse"].format(s=t["strength"]) if t["strength"] else "",
+                                        mark=M["r_inrange"] if t["in_range"] else ""))
     if result["sensitivity_rpm_per_10mm"] is not None:
-        lines.append(f"  Чувствительность: +10 мм длины → {result['sensitivity_rpm_per_10mm']} об/мин")
-    lines += ["", f"Подбор длины под {p['target_rpm']} об/мин:"]
+        lines.append(M["r_sens"].format(s=result["sensitivity_rpm_per_10mm"]))
+    lines += ["", M["r_pick"].format(t=p["target_rpm"])]
     for x in result["pick"]:
-        mark = " ◄ влезает" if x["fits"] else ""
-        lines.append(f"  {x['k']}-я гармоника: {x['len_mm']} мм (альт. {x['len_alt_mm']}){mark}")
+        lines.append(M["r_pickrow"].format(k=x["k"], L=x["len_mm"], alt=x["len_alt_mm"],
+                                           mark=M["r_fits"] if x["fits"] else ""))
     lines += [
         "",
-        f"Скорость в канале на отсечке: {k['v_limit']} м/с (M = {k['mach_limit']}); "
-        f"рекомендуемый Ø {k['d_rec'][0]}–{k['d_rec'][1]} мм",
-        f"Расход воздуха на отсечке: {k['flow_limit']} кг/ч (сравнить с ДМРВ в логах)",
-        f"Средняя скорость в дросселе: {k['th_v_limit']} м/с",
+        M["r_vel"].format(v=k["v_limit"], m=k["mach_limit"], d0=k["d_rec"][0], d1=k["d_rec"][1]),
+        M["r_flow"].format(f=k["flow_limit"]),
+        M["r_th"].format(v=k["th_v_limit"]),
         "",
-        "Выводы:",
+        M["r_notes"],
     ]
     lines += [f"  • {n['text']}" for n in result["notes"]]
     return "\n".join(lines)
@@ -399,6 +476,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="переопределить параметр, напр. -s runner_len_mm=450")
     ap.add_argument("--json", action="store_true", help="вывести полный результат в JSON")
     ap.add_argument("--defaults", action="store_true", help="показать параметры по умолчанию")
+    ap.add_argument("--lang", choices=LANGS, default="ru", help="язык выводов и отчёта / output language")
     a = ap.parse_args(argv)
     if a.defaults:
         print(json.dumps(DEFAULTS, ensure_ascii=False, indent=2))
@@ -409,6 +487,7 @@ def main(argv: list[str] | None = None) -> int:
             data = json.load(fh)
         params.update(data.get("params", data))
     params.update(_parse_set(a.set))
+    params["lang"] = a.lang
     res = compute(params)
     print(json.dumps(res, ensure_ascii=False, indent=2) if a.json else report(res))
     return 0

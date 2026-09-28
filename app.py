@@ -58,6 +58,11 @@ class Api:
     def version(self) -> str:
         return calc.__version__
 
+    def set_title(self, title: str) -> bool:
+        if self._window is not None and title:
+            self._window.set_title(title)
+        return True
+
     # --- автосохранение последних параметров
     def load_settings(self) -> dict:
         try:

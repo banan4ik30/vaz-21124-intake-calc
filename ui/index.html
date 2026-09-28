@@ -192,8 +192,8 @@ svg text{font-family:inherit;font-size:11px;fill:var(--dim)}
       <path d="M175 62 C175 85 180 95 180 112"/>
       <path d="M110 30 V8 M96 8 H124"/>
     </svg>
-    <div class="splash-t">Расчёт впускного коллектора</div>
-    <div class="splash-s">на основе мотора ВАЗ 21124 1.6 16V</div>
+    <div class="splash-t" data-i="splash_t">Расчёт впускного коллектора</div>
+    <div class="splash-s" data-i="splash_s">на основе мотора ВАЗ 21124 1.6 16V</div>
   </div>
 </div>
 
@@ -201,7 +201,7 @@ svg text{font-family:inherit;font-size:11px;fill:var(--dim)}
   <aside>
     <div class="brand">
       <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="6" rx="2"/><path d="M6 10v10M10 10v10M14 10v10M18 10v10"/></svg></div>
-      <div><h1>Впускной коллектор</h1><p>расчёт на базе ВАЗ 21124 · <span id="ver"></span></p></div>
+      <div><h1 data-i="brand_h">Впускной коллектор</h1><p><span data-i="brand_p">расчёт на базе ВАЗ 21124</span> · <span id="ver"></span></p></div>
     </div>
     <div class="side-scroll" id="fields"></div>
   </aside>
@@ -209,35 +209,39 @@ svg text{font-family:inherit;font-size:11px;fill:var(--dim)}
   <main>
     <div class="top">
       <div>
-        <h2>Настройка <span>впускного тракта</span></h2>
-        <p>Меняйте параметры слева или тяните маркер на графике — всё пересчитывается мгновенно</p>
+        <h2 data-ih="top_h">Настройка <span>впускного тракта</span></h2>
+        <p data-i="top_p">Меняйте параметры слева или тяните маркер на графике — всё пересчитывается мгновенно</p>
       </div>
       <div class="actions">
         <div class="seg" id="seg">
           <div class="pill"></div>
-          <button data-v="empirical" title="c ≈ 396 м/с — как в классических формулах Vizard / DRIVE2">Эмпирическая</button>
-          <button data-v="physical" title="c из температуры воздуха во впуске">Физическая</button>
+          <button data-v="empirical" data-i="m_emp" data-it="m_emp_t" title="">Эмпирическая</button>
+          <button data-v="physical" data-i="m_phys" data-it="m_phys_t" title="">Физическая</button>
         </div>
-        <button class="btn" id="base" title="Запомнить текущий вариант как базу для сравнения">◎ База</button>
-        <button class="btn" id="open" title="Открыть конфигурацию (.json)">📂</button>
-        <button class="btn" id="save" title="Сохранить конфигурацию (.json)">💾</button>
-        <button class="btn" id="reset">↺ Сток 21124</button>
-        <button class="btn primary" id="export">⤓ Отчёт</button>
+        <div class="seg" id="segLang">
+          <div class="pill"></div>
+          <button data-v="ru">RU</button><button data-v="en">EN</button>
+        </div>
+        <button class="btn" id="base" data-i="b_base" data-it="b_base_t">◎ База</button>
+        <button class="btn" id="open" data-it="b_open_t">📂</button>
+        <button class="btn" id="save" data-it="b_save_t">💾</button>
+        <button class="btn" id="reset" data-i="b_reset">↺ Сток 21124</button>
+        <button class="btn primary" id="export" data-i="b_export">⤓ Отчёт</button>
       </div>
     </div>
 
     <div class="kpis">
-      <div class="card kpi" style="animation-delay:.05s"><div class="lbl"><span class="dot" id="d0"></span>Главный пик настройки</div><div class="val" id="k0">—</div><div class="sub" id="s0"></div><div class="bar" id="b0"></div></div>
-      <div class="card kpi" style="animation-delay:.12s"><div class="lbl"><span class="dot" id="d1"></span>Скорость в канале на отсечке</div><div class="val" id="k1">—</div><div class="sub" id="s1"></div><div class="bar" id="b1"></div></div>
-      <div class="card kpi" style="animation-delay:.19s"><div class="lbl"><span class="dot" id="d2"></span>Ресивер / рабочий объём</div><div class="val" id="k2">—</div><div class="sub" id="s2"></div><div class="bar" id="b2"></div></div>
-      <div class="card kpi" style="animation-delay:.26s"><div class="lbl"><span class="dot" id="d3"></span>Расход воздуха на отсечке</div><div class="val" id="k3">—</div><div class="sub" id="s3"></div><div class="bar" id="b3"></div></div>
+      <div class="card kpi" style="animation-delay:.05s"><div class="lbl"><span class="dot" id="d0"></span><span data-i="k0_l">Главный пик настройки</span></div><div class="val" id="k0">—</div><div class="sub" id="s0"></div><div class="bar" id="b0"></div></div>
+      <div class="card kpi" style="animation-delay:.12s"><div class="lbl"><span class="dot" id="d1"></span><span data-i="k1_l">Скорость в канале на отсечке</span></div><div class="val" id="k1">—</div><div class="sub" id="s1"></div><div class="bar" id="b1"></div></div>
+      <div class="card kpi" style="animation-delay:.19s"><div class="lbl"><span class="dot" id="d2"></span><span data-i="k2_l">Ресивер / рабочий объём</span></div><div class="val" id="k2">—</div><div class="sub" id="s2"></div><div class="bar" id="b2"></div></div>
+      <div class="card kpi" style="animation-delay:.26s"><div class="lbl"><span class="dot" id="d3"></span><span data-i="k3_l">Расход воздуха на отсечке</span></div><div class="val" id="k3">—</div><div class="sub" id="s3"></div><div class="bar" id="b3"></div></div>
     </div>
 
     <div class="row">
       <div class="card" style="animation-delay:.3s">
         <div class="card-h">
-          <div><h3>Длина канала → обороты резонансного пика</h3><p>Длина от седла клапана до входа в ресивер. Полосы — разброс между эмпирической и физической моделью</p></div>
-          <div class="hint"><kbd>тяните</kbd> по графику, чтобы менять длину</div>
+          <div><h3 data-i="c1_h">Длина канала → обороты резонансного пика</h3><p data-i="c1_p">Длина от седла клапана до входа в ресивер. Полосы — разброс между эмпирической и физической моделью</p></div>
+          <div class="hint" data-ih="c1_hint"><kbd>тяните</kbd> по графику, чтобы менять длину</div>
         </div>
         <div class="legend" id="lg1"></div>
         <div class="chart-wrap"><svg class="chart" id="c1"></svg><div class="tip" id="tip1"></div></div>
@@ -250,28 +254,28 @@ svg text{font-family:inherit;font-size:11px;fill:var(--dim)}
           <div><h3 id="c2t">Скорость в канале по оборотам</h3><p id="c2p">Зелёная зона — рабочие 55–90 м/с</p></div>
           <div class="seg" id="seg2">
             <div class="pill"></div>
-            <button data-v="vel">Канал</button><button data-v="flow">Расход</button><button data-v="th_vel">Дроссель</button>
+            <button data-v="vel" data-i="c2_vel">Канал</button><button data-v="flow" data-i="c2_flow">Расход</button><button data-v="th_vel" data-i="c2_th">Дроссель</button>
           </div>
         </div>
         <div class="chart-wrap"><svg class="chart" id="c2"></svg><div class="tip" id="tip2"></div></div>
       </div>
       <div class="card" style="animation-delay:.44s">
-        <div class="card-h"><div><h3>Подбор длины под <span id="tgt">—</span> об/мин</h3><p>Штриховка — что влезает под капот (компоновка слева)</p></div></div>
+        <div class="card-h"><div><h3><span data-i="pick_h1">Подбор длины под</span> <span id="tgt">—</span> <span data-i="rpm">об/мин</span></h3><p data-i="pick_p">Штриховка — что влезает под капот (компоновка слева)</p></div></div>
         <div class="pick" id="pick"></div>
       </div>
     </div>
 
     <div class="row two">
       <div class="card" style="animation-delay:.5s">
-        <div class="card-h"><div><h3>Выводы</h3><p>Автоматический разбор текущей конфигурации</p></div></div>
+        <div class="card-h"><div><h3 data-i="notes_h">Выводы</h3><p data-i="notes_p">Автоматический разбор текущей конфигурации</p></div></div>
         <div class="notes" id="notes"></div>
       </div>
       <div class="card" style="animation-delay:.56s">
-        <div class="card-h"><div><h3>Параметры мотора</h3><p>Производные величины</p></div></div>
+        <div class="card-h"><div><h3 data-i="tech_h">Параметры мотора</h3><p data-i="tech_p">Производные величины</p></div></div>
         <div class="tech" id="tech"></div>
-        <div class="card-h" style="padding-top:0"><div><h3>Резонанс ресивера от объёма</h3><p>При текущем дросселе и трубе до фильтра · физическая скорость звука</p></div></div>
+        <div class="card-h" style="padding-top:0"><div><h3 data-i="sweep_h">Резонанс ресивера от объёма</h3><p data-i="sweep_p">При текущем дросселе и трубе до фильтра · физическая скорость звука</p></div></div>
         <div class="pick" id="sweep"></div>
-        <div style="padding:0 18px 18px"><div class="disclaimer"><span>⚠</span><div><b>Инженерная оценка, ±10–15 %.</b> Волновая настройка по классической методике (Vizard/Engle). Подходит, чтобы выбрать стартовую длину и объём и сравнивать варианты. Точный ответ дают 1D-моделирование (EngMod4T, GT-Power) и логи Января «до/после».</div></div></div>
+        <div style="padding:0 18px 18px"><div class="disclaimer"><span>⚠</span><div data-ih="disclaimer"><b>Инженерная оценка, ±10–15 %.</b> Волновая настройка по классической методике (Vizard/Engle). Подходит, чтобы выбрать стартовую длину и объём и сравнивать варианты. Точный ответ дают 1D-моделирование (EngMod4T, GT-Power) и логи Января «до/после».</div></div></div>
       </div>
     </div>
   </main>
@@ -301,48 +305,137 @@ async function api(name, arg){
 }
 
 /* ---------- поля ---------- */
+// [ключ, {ru, en} подпись, {ru, en} единица, min, max, шаг, {ru, en} подсказка]
+const L = (ru, en) => ({ru, en});
 const GROUPS = [
-  ['Двигатель', [
-    ['bore_mm','Диаметр цилиндра','мм',70,95,.1,'21124: 82 мм'],
-    ['stroke_mm','Ход поршня','мм',60,90,.1,'21124: 75,6 мм'],
-    ['cr','Степень сжатия','',8,13,.1,'21124: ~10,3'],
+  [L('Двигатель','Engine'), [
+    ['bore_mm', L('Диаметр цилиндра','Bore'), L('мм','mm'),70,95,.1, L('21124: 82 мм','21124: 82 mm')],
+    ['stroke_mm', L('Ход поршня','Stroke'), L('мм','mm'),60,90,.1, L('21124: 75,6 мм','21124: 75.6 mm')],
+    ['cr', L('Степень сжатия','Compression ratio'), L('',''),8,13,.1, L('21124: ~10,3','21124: ~10.3')],
   ]],
-  ['Распредвал впуска', [
-    ['ivo_btdc','Открытие впуска','° до ВМТ',0,60,1,'сток 21124: 17°'],
-    ['ivc_abdc','Закрытие впуска','° после НМТ',20,90,1,'сток 21124: 59° — ключевой параметр'],
+  [L('Распредвал впуска','Intake camshaft'), [
+    ['ivo_btdc', L('Открытие впуска','Intake opens'), L('° до ВМТ','° BTDC'),0,60,1, L('сток 21124: 17°','stock 21124: 17°')],
+    ['ivc_abdc', L('Закрытие впуска','Intake closes'), L('° после НМТ','° ABDC'),20,90,1, L('сток 21124: 59° — ключевой параметр','stock 21124: 59° — the key parameter')],
   ], 'dur'],
-  ['Впускной тракт', [
-    ['runner_len_mm','Длина канала','мм',200,1000,5,'от седла до входа в ресивер · ~500 по алюминиевому аналогу 2112 · из них голова ~80 (модели)'],
-    ['runner_d_mm','Диаметр канала','мм',28,50,.5,'сток ~34,5: выход пластика 34,3×33,7 (замер), окна ГБЦ 34,8–35'],
-    ['plenum_l','Объём ресивера','л',.5,5,.05,'только камера, без каналов · сток ~1,5 (2,7 л всего − ~1,2 л каналов)'],
-    ['throttle_d_mm','Дроссель','мм',40,70,1,'сток 46 мм'],
+  [L('Впускной тракт','Intake tract'), [
+    ['runner_len_mm', L('Длина канала','Runner length'), L('мм','mm'),200,1000,5,
+      L('от седла до входа в ресивер · ~500 по алюминиевому аналогу 2112 · из них голова ~80 (модели)','valve seat → plenum entry · ~500 per the aluminium 2112 analogue · ~80 of it in the head (CAD)')],
+    ['runner_d_mm', L('Диаметр канала','Runner diameter'), L('мм','mm'),28,50,.5,
+      L('сток ~34,5: выход пластика 34,3×33,7 (замер), окна ГБЦ 34,8–35','stock ~34.5: plastic outlet 34.3×33.7 (measured), head ports 34.8–35')],
+    ['plenum_l', L('Объём ресивера','Plenum volume'), L('л','L'),.5,5,.05,
+      L('только камера, без каналов · сток ~1,5 (2,7 л всего − ~1,2 л каналов)','chamber only, without runners · stock ~1.5 (2.7 L total − ~1.2 L runners)')],
+    ['throttle_d_mm', L('Дроссель','Throttle'), L('мм','mm'),40,70,1, L('сток 46 мм','stock 46 mm')],
   ]],
-  ['Подвод воздуха (резонанс ресивера)', [
-    ['inlet_len_mm','Труба дроссель → фильтр','мм',0,1000,10,'длина по оси, включая патрубок ДМРВ'],
-    ['inlet_d_mm','Диаметр трубы','мм',40,90,1,'внутренний, средний'],
+  [L('Подвод воздуха (резонанс ресивера)','Air inlet (plenum resonance)'), [
+    ['inlet_len_mm', L('Труба дроссель → фильтр','Throttle → filter pipe'), L('мм','mm'),0,1000,10, L('длина по оси, включая патрубок ДМРВ','centre-line length incl. the MAF housing')],
+    ['inlet_d_mm', L('Диаметр трубы','Pipe diameter'), L('мм','mm'),40,90,1, L('внутренний, средний','inner, average')],
   ]],
-  ['Режим', [
-    ['rpm_min','Нижняя граница','об/мин',800,3000,100,''],
-    ['rpm_limit','Отсечка','об/мин',4500,8500,100,''],
-    ['target_rpm','Целевой пик','об/мин',1500,8000,50,'под эти обороты подбирается длина'],
-    ['ve','Наполнение (VE)','',.6,1.1,.01,'для расчёта расхода; сток ~0,85–0,9'],
-    ['air_temp_c','Температура во впуске','°C',-20,80,1,'влияет на физическую модель'],
+  [L('Режим','Operating range'), [
+    ['rpm_min', L('Нижняя граница','Lower limit'), L('об/мин','rpm'),800,3000,100, L('','')],
+    ['rpm_limit', L('Отсечка','Rev limit'), L('об/мин','rpm'),4500,8500,100, L('','')],
+    ['target_rpm', L('Целевой пик','Target peak'), L('об/мин','rpm'),1500,8000,50, L('под эти обороты подбирается длина','the runner length is matched to this rpm')],
+    ['ve', L('Наполнение (VE)','Volumetric efficiency'), L('',''),.6,1.1,.01, L('для расчёта расхода; сток ~0,85–0,9','for the air-flow estimate; stock ~0.85–0.9')],
+    ['air_temp_c', L('Температура во впуске','Intake air temperature'), L('°C','°C'),-20,80,1, L('влияет на физическую модель','affects the physical model')],
   ]],
-  ['Компоновка под капотом', [
-    ['pack_min_mm','Мин. длина канала','мм',150,600,10,''],
-    ['pack_max_mm','Макс. длина канала','мм',300,1000,10,'сколько реально уложить'],
+  [L('Компоновка под капотом','Packaging'), [
+    ['pack_min_mm', L('Мин. длина канала','Min runner length'), L('мм','mm'),150,600,10, L('','')],
+    ['pack_max_mm', L('Макс. длина канала','Max runner length'), L('мм','mm'),300,1000,10, L('сколько реально уложить','what really fits under the hood')],
   ]],
 ];
+
+/* ---------- язык ---------- */
+let LANG = 'ru';
+const T = {
+  ru: {
+    splash_t:'Расчёт впускного коллектора', splash_s:'на основе мотора ВАЗ 21124 1.6 16V',
+    brand_h:'Впускной коллектор', brand_p:'расчёт на базе ВАЗ 21124',
+    top_h:'Настройка <span>впускного тракта</span>', top_p:'Меняйте параметры слева или тяните маркер на графике — всё пересчитывается мгновенно',
+    m_emp:'Эмпирическая', m_phys:'Физическая', m_emp_t:'c ≈ 396 м/с — как в классических формулах Vizard / DRIVE2', m_phys_t:'c из температуры воздуха во впуске',
+    b_base:'◎ База', b_base_t:'Запомнить текущий вариант как базу для сравнения', b_open_t:'Открыть конфигурацию (.json)', b_save_t:'Сохранить конфигурацию (.json)',
+    b_reset:'↺ Сток 21124', b_export:'⤓ Отчёт',
+    k0_l:'Главный пик настройки', k1_l:'Скорость в канале на отсечке', k2_l:'Ресивер / рабочий объём', k3_l:'Расход воздуха на отсечке',
+    c1_h:'Длина канала → обороты резонансного пика', c1_p:'Длина от седла клапана до входа в ресивер. Полосы — разброс между эмпирической и физической моделью',
+    c1_hint:'<kbd>тяните</kbd> по графику, чтобы менять длину',
+    c2_vel:'Канал', c2_flow:'Расход', c2_th:'Дроссель',
+    pick_h1:'Подбор длины под', rpm:'об/мин', pick_p:'Штриховка — что влезает под капот (компоновка слева)',
+    notes_h:'Выводы', notes_p:'Автоматический разбор текущей конфигурации',
+    tech_h:'Параметры мотора', tech_p:'Производные величины',
+    sweep_h:'Резонанс ресивера от объёма', sweep_p:'При текущем дросселе и трубе до фильтра · физическая скорость звука',
+    disclaimer:'<b>Инженерная оценка, ±10–15 %.</b> Волновая настройка по классической методике (Vizard/Engle). Подходит, чтобы выбрать стартовую длину и объём и сравнивать варианты. Точный ответ дают 1D-моделирование (EngMod4T, GT-Power) и логи Января «до/после».',
+    mm:'мм', ms:'м/с', kgh:'кг/ч', l:'л', cc:'см³', cm2:'см²', kgm3:'кг/м³',
+    phase:'Фаза', harm:k => `${k}-я`, harm_long:k => `${k}-я гармоника`,
+    target:'цель', plenum_res:'резонанс ресивера', base:'база',
+    leg_work:'рабочие обороты', leg_fit:'влезает под капот', leg_pr:'резонанс ресивера', leg_base:'база',
+    c2m_vel_t:'Скорость в канале по оборотам', c2m_vel_p:'Зелёная зона — рабочие 55–90 м/с',
+    c2m_flow_t:'Расход воздуха по оборотам', c2m_flow_p:'Сравнивайте с ДМРВ (кг/ч) в логах ЭБУ',
+    c2m_th_t:'Средняя скорость в дросселе', c2m_th_p:'До ~75 м/с дроссель не ограничивает',
+    c2m_tip:{vel:'Канал', flow:'Расход', th_vel:'Дроссель'},
+    fits:'ВЛЕЗАЕТ', nofit:'НЕТ', alt:'альт.', pulse:'импульс',
+    no_peak:'нет пика в рабочем диапазоне', rec:'реком.', throttle:'дроссель', resonance:'резонанс',
+    your_plenum:'ваш ресивер',
+    t_disp:'Рабочий объём', t_cyl:'Цилиндр', t_dur:'Фаза впуска', t_c:'Скорость звука (расчёт)', t_cp:'Физическая',
+    t_rho:'Плотность воздуха', t_area:'Сечение канала', t_mach:'Мах в канале', t_sens:'+10 мм длины',
+    toast_base_off:'База сброшена', toast_base_on:'Текущий вариант запомнен как база — меняйте параметры и сравнивайте',
+    toast_saved:'Конфигурация сохранена: ', toast_loaded:'Конфигурация загружена', toast_reset:'Параметры сброшены к стоку 21124',
+    toast_report:'Отчёт сохранён: ', toast_dev:'DEV: отчёт выведен в консоль сервера',
+    title:'Расчёт впускного коллектора ВАЗ 21124',
+  },
+  en: {
+    splash_t:'Intake manifold calculator', splash_s:'based on the VAZ 21124 1.6 16V engine',
+    brand_h:'Intake manifold', brand_p:'VAZ 21124 based calculator',
+    top_h:'Tuning the <span>intake tract</span>', top_p:'Change the parameters on the left or drag the marker on the chart — everything updates instantly',
+    m_emp:'Empirical', m_phys:'Physical', m_emp_t:'c ≈ 396 m/s — as in the classic Vizard formula and online calculators', m_phys_t:'c from the intake air temperature',
+    b_base:'◎ Baseline', b_base_t:'Remember the current setup as a baseline for comparison', b_open_t:'Open a configuration (.json)', b_save_t:'Save the configuration (.json)',
+    b_reset:'↺ Stock 21124', b_export:'⤓ Report',
+    k0_l:'Main tuning peak', k1_l:'Runner velocity at rev limit', k2_l:'Plenum / displacement', k3_l:'Air flow at rev limit',
+    c1_h:'Runner length → resonance peak rpm', c1_p:'Length from the valve seat to the plenum entry. Bands show the spread between the empirical and physical models',
+    c1_hint:'<kbd>drag</kbd> on the chart to change the length',
+    c2_vel:'Runner', c2_flow:'Air flow', c2_th:'Throttle',
+    pick_h1:'Length for a peak at', rpm:'rpm', pick_p:'Hatched — what fits under the hood (packaging on the left)',
+    notes_h:'Conclusions', notes_p:'Automatic review of the current setup',
+    tech_h:'Engine data', tech_p:'Derived values',
+    sweep_h:'Plenum resonance vs. volume', sweep_p:'With the current throttle and filter pipe · physical speed of sound',
+    disclaimer:'<b>Engineering estimate, ±10–15 %.</b> Wave tuning per the classic method (Vizard/Engle). Good for choosing a starting length and volume and for comparing variants. Exact answers come from 1D simulation (EngMod4T, GT-Power) and before/after ECU logs.',
+    mm:'mm', ms:'m/s', kgh:'kg/h', l:'L', cc:'cc', cm2:'cm²', kgm3:'kg/m³',
+    phase:'Duration', harm:k => `#${k}`, harm_long:k => `harmonic #${k}`,
+    target:'target', plenum_res:'plenum resonance', base:'baseline',
+    leg_work:'working rpm', leg_fit:'fits under the hood', leg_pr:'plenum resonance', leg_base:'baseline',
+    c2m_vel_t:'Runner velocity vs. rpm', c2m_vel_p:'Green band — the 55–90 m/s working range',
+    c2m_flow_t:'Air flow vs. rpm', c2m_flow_p:'Compare with the MAF (kg/h) in ECU logs',
+    c2m_th_t:'Mean throttle velocity', c2m_th_p:'Up to ~75 m/s the throttle does not restrict',
+    c2m_tip:{vel:'Runner', flow:'Air flow', th_vel:'Throttle'},
+    fits:'FITS', nofit:'NO', alt:'alt.', pulse:'pulse',
+    no_peak:'no peak in the working range', rec:'rec.', throttle:'throttle', resonance:'resonance',
+    your_plenum:'your plenum',
+    t_disp:'Displacement', t_cyl:'Cylinder', t_dur:'Intake duration', t_c:'Speed of sound (used)', t_cp:'Physical',
+    t_rho:'Air density', t_area:'Runner area', t_mach:'Runner Mach', t_sens:'+10 mm length',
+    toast_base_off:'Baseline cleared', toast_base_on:'Current setup saved as baseline — change parameters and compare',
+    toast_saved:'Configuration saved: ', toast_loaded:'Configuration loaded', toast_reset:'Parameters reset to stock 21124',
+    toast_report:'Report saved: ', toast_dev:'DEV: report printed to the server console',
+    title:'VAZ 21124 intake manifold calculator',
+  },
+};
+const _t = (k, ...a) => { const v = (T[LANG] || T.ru)[k]; return typeof v === 'function' ? v(...a) : (v ?? k); };
+function applyI18n(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i]').forEach(e => e.textContent = _t(e.dataset.i));
+  document.querySelectorAll('[data-ih]').forEach(e => e.innerHTML = _t(e.dataset.ih));
+  document.querySelectorAll('[data-it]').forEach(e => e.title = _t(e.dataset.it));
+  document.title = _t('title');
+}
 let P = {}; const inputs = {};
 
 function buildFields(){
   const root = $('#fields'); let gi = 0;
-  for (const [title, list, extra] of GROUPS){
+  root.innerHTML = '';
+  for (const [title0, list, extra] of GROUPS){
+    const title = title0[LANG];
     const g = document.createElement('div'); g.className = 'group'; g.style.animationDelay = (0.15 + gi++ * 0.07) + 's';
     g.innerHTML = `<div class="group-h"><span>${title}</span><i></i></div><div class="group-b"><div></div></div>`;
     g.querySelector('.group-h').onclick = () => g.classList.toggle('closed');
     const body = g.querySelector('.group-b>div');
-    for (const [key,label,unit,min,max,step,help] of list){
+    for (const [key,label0,unit0,min,max,step,help0] of list){
+      const label = label0[LANG], unit = unit0[LANG], help = help0[LANG];
       const f = document.createElement('div'); f.className = 'field';
       f.innerHTML = `<div class="field-top"><label>${label}</label><div class="num"><input type="number" min="${min}" max="${max}" step="${step}"><em>${unit}</em></div></div>
         <input type="range" min="${min}" max="${max}" step="${step}">${help ? `<small>${help}</small>` : ''}`;
@@ -359,7 +452,7 @@ function buildFields(){
       inputs[key] = {set, n, r, min, max};
       body.appendChild(f);
     }
-    if (extra === 'dur'){ const c = document.createElement('div'); c.className = 'chip'; c.innerHTML = 'Фаза <b id="dur">—</b> · EVCD <b id="evcd">—</b>'; body.appendChild(c); }
+    if (extra === 'dur'){ const c = document.createElement('div'); c.className = 'chip'; c.innerHTML = `${_t('phase')} <b id="dur">—</b> · EVCD <b id="evcd">—</b>`; body.appendChild(c); }
     root.appendChild(g);
   }
 }
@@ -395,7 +488,7 @@ function countTo(el, v, dec = 0, suffix = ''){
     el.innerHTML = fmt(from + (v - from) * e, dec) + suffix; if (k < 1) el._raf = requestAnimationFrame(step); };
   el._raf = requestAnimationFrame(step);
 }
-const fmt = (v, d = 0) => Number(v).toLocaleString('ru-RU', {minimumFractionDigits:d, maximumFractionDigits:d});
+const fmt = (v, d = 0) => Number(v).toLocaleString(LANG === 'en' ? 'en-US' : 'ru-RU', {minimumFractionDigits:d, maximumFractionDigits:d});
 
 /* ---------- твин структур ---------- */
 function lerpDeep(a, b, t){
@@ -452,7 +545,7 @@ function drawC1(D){
   const ax = el('g', {class:'axis'}, svg);
   for (let y = 1000; y <= 9000; y += 1000){ el('line', {x1:l, x2:l + iw, y1:sy(y), y2:sy(y)}, ax); const tx = el('text', {x:l - 8, y:sy(y) + 4, 'text-anchor':'end'}, ax); tx.textContent = y / 1000 + 'k'; }
   for (let x = 200; x <= 1000; x += 100){ el('line', {x1:sx(x), x2:sx(x), y1:t, y2:t + ih, opacity:.5}, ax); const tx = el('text', {x:sx(x), y:t + ih + 20, 'text-anchor':'middle'}, ax); tx.textContent = x; }
-  const ux = el('text', {x:l + iw, y:H - 2, 'text-anchor':'end'}, ax); ux.textContent = 'мм';
+  const ux = el('text', {x:l + iw, y:H - 2, 'text-anchor':'end'}, ax); ux.textContent = _t('mm');
 
   const g = el('g', {'clip-path':'url(#cl1)'}, svg);
   // зона рабочих оборотов
@@ -461,10 +554,10 @@ function drawC1(D){
   el('rect', {x:sx(D.pmin), width:Math.max(0, sx(D.pmax) - sx(D.pmin)), y:t, height:ih, fill:'rgba(62,224,160,.05)', stroke:'rgba(62,224,160,.25)', 'stroke-dasharray':'4 6'}, g);
   // целевые обороты
   el('line', {x1:l, x2:l + iw, y1:sy(D.tgt), y2:sy(D.tgt), stroke:'rgba(255,255,255,.35)', 'stroke-dasharray':'6 6'}, g);
-  const tl = el('text', {x:l + iw - 6, y:sy(D.tgt) - 6, 'text-anchor':'end', fill:'rgba(255,255,255,.6)'}, g); tl.textContent = 'цель ' + Math.round(D.tgt);
+  const tl = el('text', {x:l + iw - 6, y:sy(D.tgt) - 6, 'text-anchor':'end', fill:'rgba(255,255,255,.6)'}, g); tl.textContent = _t('target') + ' ' + Math.round(D.tgt);
   // резонанс ресивера
   el('line', {x1:l, x2:l + iw, y1:sy(D.pr), y2:sy(D.pr), stroke:'#6aa8ff', 'stroke-width':1.5, 'stroke-dasharray':'2 5', opacity:.9}, g);
-  const pl = el('text', {x:l + 8, y:sy(D.pr) - 6, style:'fill:#6aa8ff'}, g); pl.textContent = 'резонанс ресивера ' + Math.round(D.pr);
+  const pl = el('text', {x:l + 8, y:sy(D.pr) - 6, style:'fill:#6aa8ff'}, g); pl.textContent = _t('plenum_res') + ' ' + Math.round(D.pr);
 
   D.curves.forEach((c, i) => {
     const k = R.chart_len.curves[i].k, col = KH[k];
@@ -479,14 +572,14 @@ function drawC1(D){
   if (BASE){
     const bx = sx(+BASE.params.runner_len_mm);
     el('line', {x1:bx, x2:bx, y1:t, y2:t + ih, stroke:'rgba(255,255,255,.45)', 'stroke-width':1.5, 'stroke-dasharray':'5 5'}, svg);
-    const bt = el('text', {x:bx - 6, y:t + ih - 6, 'text-anchor':'end', style:'fill:rgba(255,255,255,.6)'}, svg); bt.textContent = 'база ' + BASE.params.runner_len_mm;
+    const bt = el('text', {x:bx - 6, y:t + ih - 6, 'text-anchor':'end', style:'fill:rgba(255,255,255,.6)'}, svg); bt.textContent = _t('base') + ' ' + BASE.params.runner_len_mm;
   }
   // маркер длины
   const mx = sx(D.len);
   el('line', {x1:mx, x2:mx, y1:t, y2:t + ih, stroke:'#fff', 'stroke-width':1.5, opacity:.85}, svg);
   const lab = el('g', {}, svg);
   el('rect', {x:mx - 34, y:t + 2, width:68, height:22, rx:8, fill:'#fff'}, lab);
-  const lt = el('text', {x:mx, y:t + 17, 'text-anchor':'middle', class:'marker-lbl', fill:'#07090f', style:'fill:#07090f'}, lab); lt.textContent = Math.round(D.len) + ' мм';
+  const lt = el('text', {x:mx, y:t + 17, 'text-anchor':'middle', class:'marker-lbl', fill:'#07090f', style:'fill:#07090f'}, lab); lt.textContent = Math.round(D.len) + ' ' + _t('mm');
   const lenM = D.len / 1000, dM = (+R.params.runner_d_mm) / 1000;
   R.chart_len.curves.forEach(c => {
     const rpm = R.engine.c * R.engine.evcd / (24 * c.k * (lenM + dM / 2));
@@ -512,8 +605,8 @@ function renderC1(R){ tween(c1.st, c1Target(R), drawC1); }
     if (drag) setLen(e);
     if (!R) return; const v = lenAt(e); if (v == null) return;
     const dM = (+R.params.runner_d_mm) / 1000;
-    const rows = R.chart_len.curves.map(c => `<div><span style="color:${KH[c.k]}">${c.k}-я гармоника</span><span>${fmt(R.engine.c * R.engine.evcd / (24 * c.k * (v / 1000 + dM / 2)))}</span></div>`).join('');
-    tip.innerHTML = `<b>${Math.round(v)} мм</b>${rows}`;
+    const rows = R.chart_len.curves.map(c => `<div><span style="color:${KH[c.k]}">${_t('harm_long', c.k)}</span><span>${fmt(R.engine.c * R.engine.evcd / (24 * c.k * (v / 1000 + dM / 2)))}</span></div>`).join('');
+    tip.innerHTML = `<b>${Math.round(v)} ${_t('mm')}</b>${rows}`;
     const wr = svg.parentElement.getBoundingClientRect(), x = e.clientX - wr.left, y = e.clientY - wr.top;
     tip.style.left = Math.min(x + 16, wr.width - 170) + 'px'; tip.style.top = Math.max(8, y - 40) + 'px'; tip.classList.add('on');
   });
@@ -522,11 +615,10 @@ function renderC1(R){ tween(c1.st, c1Target(R), drawC1); }
 
 /* ---------- график 2 ---------- */
 const c2 = {st:{}, M:{l:48,r:16,t:16,b:30}};
-const C2META = {
-  vel:{t:'Скорость в канале по оборотам', p:'Зелёная зона — рабочие 55–90 м/с', unit:'м/с', band:[55,90], col:'#ff7a18'},
-  flow:{t:'Расход воздуха по оборотам', p:'Сравнивайте с ДМРВ (кг/ч) в логах Января', unit:'кг/ч', band:null, col:'#3ee0cf'},
-  th_vel:{t:'Средняя скорость в дросселе', p:'До ~75 м/с дроссель не ограничивает', unit:'м/с', band:[0,75], col:'#8b7bff'},
-};
+const C2BASE = {vel:{band:[55,90], col:'#ff7a18', k:'vel', u:'ms'}, flow:{band:null, col:'#3ee0cf', k:'flow', u:'kgh'},
+                th_vel:{band:[0,75], col:'#8b7bff', k:'th', u:'ms'}};
+const C2META = new Proxy({}, {get: (_, mode) => { const b = C2BASE[mode];
+  return {...b, t:_t('c2m_' + b.k + '_t'), p:_t('c2m_' + b.k + '_p'), unit:_t(b.u)}; }});
 function renderC2Target(R, fresh){
   const m = C2META[mode2]; $('#c2t').textContent = m.t; $('#c2p').textContent = m.p;
   const ys = R.chart_rpm[mode2]; const ymax = niceMax(Math.max(...ys, m.band ? m.band[1] : 0) * 1.1);
@@ -549,7 +641,7 @@ function drawC2(D){
   if (m.band) el('rect', {x:l, width:iw, y:sy(Math.min(D.band[1], D.ymax)), height:Math.max(0, sy(D.band[0]) - sy(Math.min(D.band[1], D.ymax))), fill:'rgba(62,224,160,.07)'}, svg);
   if (D.pr >= x0 && D.pr <= x1){
     el('line', {x1:sx(D.pr), x2:sx(D.pr), y1:t, y2:t + ih, stroke:'#6aa8ff', 'stroke-width':1.5, 'stroke-dasharray':'2 5'}, svg);
-    const pt = el('text', {x:sx(D.pr) + 6, y:t + 12, style:'fill:#6aa8ff'}, svg); pt.textContent = 'резонанс ресивера';
+    const pt = el('text', {x:sx(D.pr) + 6, y:t + 12, style:'fill:#6aa8ff'}, svg); pt.textContent = _t('plenum_res');
   }
   if (BASE && BASE.chart_rpm.rpm.length === xs.length && BASE.chart_rpm.rpm[0] === x0){
     const bp = xs.map((x, i) => [sx(x), sy(BASE.chart_rpm[mode2][i])]);
@@ -573,7 +665,7 @@ function drawC2(D){
     const x = e.clientX - svg.getBoundingClientRect().left;
     const rpm = g.x0 + (x - g.l) / g.iw * (g.x1 - g.x0); const xs = R.chart_rpm.rpm;
     let i = xs.findIndex(v => v >= rpm); if (i < 0) i = xs.length - 1;
-    tip.innerHTML = `<b>${xs[i]} об/мин</b><div><span>${C2META[mode2].t.split(' ')[0]}</span><span>${fmt(R.chart_rpm[mode2][i], 1)} ${C2META[mode2].unit}</span></div>`;
+    tip.innerHTML = `<b>${xs[i]} ${_t('rpm')}</b><div><span>${_t('c2m_tip')[mode2]}</span><span>${fmt(R.chart_rpm[mode2][i], 1)} ${C2META[mode2].unit}</span></div>`;
     const wr = svg.parentElement.getBoundingClientRect();
     tip.style.left = Math.min(e.clientX - wr.left + 16, wr.width - 170) + 'px'; tip.style.top = (e.clientY - wr.top - 40) + 'px'; tip.classList.add('on');
   });
@@ -584,8 +676,9 @@ function drawC2(D){
 function renderPick(R){
   $('#tgt').textContent = fmt(R.params.target_rpm);
   const box = $('#pick');
-  if (!box.children.length){
-    box.innerHTML = R.pick.map(x => `<div class="pick-row" data-k="${x.k}"><div class="pick-k"><i style="background:${KC[x.k]}"></i>${x.k}-я</div>
+  if (box.children.length !== R.pick.length || box.dataset.lang !== LANG){
+    box.dataset.lang = LANG;
+    box.innerHTML = R.pick.map(x => `<div class="pick-row" data-k="${x.k}"><div class="pick-k"><i style="background:${KC[x.k]}"></i>${_t('harm', x.k)}</div>
       <div class="track"><div class="zone"></div><div class="fill" style="background:${KC[x.k]};color:${KH[x.k]}"></div></div>
       <div class="pick-v"><b></b><span class="badge"></span><small></small></div></div>`).join('');
   }
@@ -595,33 +688,33 @@ function renderPick(R){
     row.querySelector('.zone').style.left = (pmin / S * 100) + '%';
     row.querySelector('.zone').style.width = (Math.max(0, pmax - pmin) / S * 100) + '%';
     row.querySelector('.fill').style.width = Math.max(0, Math.min(100, x.len_mm / S * 100)) + '%';
-    countTo(row.querySelector('b'), x.len_mm, 0, ' мм');
-    const bd = row.querySelector('.badge'); bd.className = 'badge ' + (x.fits ? 'yes' : 'no'); bd.textContent = x.fits ? 'ВЛЕЗАЕТ' : 'НЕТ';
-    row.querySelector('small').textContent = 'альт. ' + x.len_alt_mm + ' мм' + (x.strength ? ` · импульс ~${x.strength} %` : '');
+    countTo(row.querySelector('b'), x.len_mm, 0, ' ' + _t('mm'));
+    const bd = row.querySelector('.badge'); bd.className = 'badge ' + (x.fits ? 'yes' : 'no'); bd.textContent = x.fits ? _t('fits') : _t('nofit');
+    row.querySelector('small').textContent = _t('alt') + ' ' + x.len_alt_mm + ' ' + _t('mm') + (x.strength ? ` · ${_t('pulse')} ~${x.strength} %` : '');
   });
 }
 
 /* ---------- KPI, выводы, параметры ---------- */
 function renderKpi(R){
   const k = R.kpi, main = R.main;
-  const bd = (v, b, d = 0, u = '') => BASE && b != null ? ` · база ${fmt(b, d)}${u}` : '';
-  if (main){ countTo($('#k0'), main.rpm, 0, '<em>об/мин</em>'); $('#s0').textContent = `${main.k}-я гармоника · альт. ${fmt(main.rpm_alt)}` + bd(main.rpm, BASE && BASE.main && BASE.main.rpm); }
-  else { $('#k0').innerHTML = '—'; $('#s0').textContent = 'нет пика в рабочем диапазоне'; }
+  const bd = (v, b, d = 0, u = '') => BASE && b != null ? ` · ${_t('base')} ${fmt(b, d)}${u}` : '';
+  if (main){ countTo($('#k0'), main.rpm, 0, `<em>${_t('rpm')}</em>`); $('#s0').textContent = `${_t('harm_long', main.k)} · ${_t('alt')} ${fmt(main.rpm_alt)}` + bd(main.rpm, BASE && BASE.main && BASE.main.rpm); }
+  else { $('#k0').innerHTML = '—'; $('#s0').textContent = _t('no_peak'); }
   $('#d0').className = 'dot ' + (main ? '' : 'warn');
   $('#b0').style.setProperty('--f', main ? Math.min(1, main.rpm / R.params.rpm_limit) : 0);
 
-  countTo($('#k1'), k.v_limit, 0, '<em>м/с</em>');
-  $('#s1').textContent = `M = ${fmt(k.mach_limit, 2)} · реком. Ø ${fmt(k.d_rec[0], 1)}–${fmt(k.d_rec[1], 1)}` + bd(k.v_limit, BASE && BASE.kpi.v_limit);
+  countTo($('#k1'), k.v_limit, 0, `<em>${_t('ms')}</em>`);
+  $('#s1').textContent = `M = ${fmt(k.mach_limit, 2)} · ${_t('rec')} Ø ${fmt(k.d_rec[0], 1)}–${fmt(k.d_rec[1], 1)}` + bd(k.v_limit, BASE && BASE.kpi.v_limit);
   $('#d1').className = 'dot ' + (k.v_limit < 55 || k.v_limit > 90 ? 'warn' : '');
   $('#b1').style.setProperty('--f', Math.min(1, k.v_limit / 100));
 
   countTo($('#k2'), k.plenum_ratio, 2, '<em>×</em>');
-  $('#s2').textContent = `${fmt(R.params.plenum_l, 2)} л · резонанс ~${fmt(R.plenum_res.rpm)}` + bd(0, BASE && BASE.plenum_res.rpm);
+  $('#s2').textContent = `${fmt(R.params.plenum_l, 2)} ${_t('l')} · ${_t('resonance')} ~${fmt(R.plenum_res.rpm)}` + bd(0, BASE && BASE.plenum_res.rpm);
   $('#d2').className = 'dot ' + (k.plenum_ratio < .7 || k.plenum_ratio > 1.8 ? 'warn' : k.plenum_ratio > 1.2 ? 'info' : '');
   $('#b2').style.setProperty('--f', Math.min(1, k.plenum_ratio / 2.5));
 
-  countTo($('#k3'), k.flow_limit, 0, '<em>кг/ч</em>');
-  $('#s3').textContent = `дроссель: ${fmt(k.th_v_limit)} м/с`;
+  countTo($('#k3'), k.flow_limit, 0, `<em>${_t('kgh')}</em>`);
+  $('#s3').textContent = `${_t('throttle')}: ${fmt(k.th_v_limit)} ${_t('ms')}`;
   $('#d3').className = 'dot ' + (k.th_v_limit > 75 ? 'warn' : '');
   $('#b3').style.setProperty('--f', Math.min(1, k.flow_limit / 400));
 }
@@ -632,16 +725,16 @@ function renderNotes(R){
 }
 function renderTech(R){
   const e = R.engine;
-  const items = [['Рабочий объём', fmt(e.displacement_l, 3) + ' л'], ['Цилиндр', fmt(e.cyl_cc, 1) + ' см³'], ['Фаза впуска', e.duration + '°'], ['EVCD', e.evcd + '°'],
-    ['Скорость звука (расчёт)', fmt(e.c, 1) + ' м/с'], ['Физическая', fmt(e.c_phys, 1) + ' м/с'], ['Плотность воздуха', fmt(e.rho, 3) + ' кг/м³'], ['Сечение канала', fmt(R.kpi.runner_area_cm2, 2) + ' см²'], ['Мах в канале', fmt(R.kpi.mach_limit, 2)],
-    ['+10 мм длины', R.sensitivity_rpm_per_10mm != null ? fmt(R.sensitivity_rpm_per_10mm) + ' об/мин' : '—']];
+  const items = [[_t('t_disp'), fmt(e.displacement_l, 3) + ' ' + _t('l')], [_t('t_cyl'), fmt(e.cyl_cc, 1) + ' ' + _t('cc')], [_t('t_dur'), e.duration + '°'], ['EVCD', e.evcd + '°'],
+    [_t('t_c'), fmt(e.c, 1) + ' ' + _t('ms')], [_t('t_cp'), fmt(e.c_phys, 1) + ' ' + _t('ms')], [_t('t_rho'), fmt(e.rho, 3) + ' ' + _t('kgm3')], [_t('t_area'), fmt(R.kpi.runner_area_cm2, 2) + ' ' + _t('cm2')], [_t('t_mach'), fmt(R.kpi.mach_limit, 2)],
+    [_t('t_sens'), R.sensitivity_rpm_per_10mm != null ? fmt(R.sensitivity_rpm_per_10mm) + ' ' + _t('rpm') : '—']];
   $('#tech').innerHTML = items.map(([a, b]) => `<span class="chip">${a} <b>${b}</b></span>`).join('');
   $('#dur').textContent = e.duration + '°'; $('#evcd').textContent = e.evcd + '°';
 }
 function legend(){
   const st = {2:'~10 %', 3:'~7 %', 4:'~4 %', 5:'<4 %', 6:'<4 %'};
-  $('#lg1').innerHTML = [2,3,4,5,6].map(k => `<span><i style="background:${KC[k]}"></i>${k}-я · ${st[k]}</span>`).join('')
-    + `<span><i style="background:rgba(62,224,207,.4)"></i>рабочие обороты</span><span><i style="background:rgba(62,224,160,.4)"></i>влезает под капот</span><span><i style="background:#6aa8ff"></i>резонанс ресивера</span><span><i style="background:rgba(255,255,255,.5)"></i>база</span>`;
+  $('#lg1').innerHTML = [2,3,4,5,6].map(k => `<span><i style="background:${KC[k]}"></i>${_t('harm', k)} · ${st[k]}</span>`).join('')
+    + `<span><i style="background:rgba(62,224,207,.4)"></i>${_t('leg_work')}</span><span><i style="background:rgba(62,224,160,.4)"></i>${_t('leg_fit')}</span><span><i style="background:#6aa8ff"></i>${_t('leg_pr')}</span><span><i style="background:rgba(255,255,255,.5)"></i>${_t('leg_base')}</span>`;
 }
 function renderSweep(R){
   const box = $('#sweep'), sw = R.plenum_res.sweep, rmin = +R.params.rpm_min, rlim = +R.params.rpm_limit, S = 6000;
@@ -654,13 +747,13 @@ function renderSweep(R){
   rows.forEach((x, i) => {
     const row = box.children[i], col = x.cur ? 'var(--acc)' : '#6aa8ff';
     row.querySelector('.pick-k i').style.background = col;
-    row.querySelector('.pick-k span').textContent = fmt(x.plenum_l, 1) + ' л';
+    row.querySelector('.pick-k span').textContent = fmt(x.plenum_l, 1) + ' ' + _t('l');
     row.querySelector('.zone').style.left = (rmin / S * 100) + '%';
     row.querySelector('.zone').style.width = (Math.max(0, rlim - rmin) / S * 100) + '%';
     const fl = row.querySelector('.fill'); fl.style.background = col; fl.style.color = x.cur ? '#ff7a18' : '#6aa8ff';
     fl.style.width = Math.min(100, x.rpm / S * 100) + '%';
-    row.querySelector('b').textContent = fmt(x.rpm) + ' об/мин';
-    row.querySelector('small').textContent = x.cur ? 'ваш ресивер' : '';
+    row.querySelector('b').textContent = fmt(x.rpm) + ' ' + _t('rpm');
+    row.querySelector('small').textContent = x.cur ? _t('your_plenum') : '';
   });
 }
 function render(R){ renderSweep(R); renderKpi(R); renderC1(R); renderC2Target(R); renderPick(R); renderNotes(R); renderTech(R); }
@@ -676,28 +769,46 @@ document.addEventListener('pointerdown', e => {
   b.appendChild(sp); setTimeout(() => sp.remove(), 650);
 });
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 2600); }
-let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (R){ c1.st.cur && drawC1(c1.st.cur); c2.st.cur && drawC2(c2.st.cur); setSeg($('#seg'), P.sound_model); setSeg($('#seg2'), mode2); } }, 60); });
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (R){ c1.st.cur && drawC1(c1.st.cur); c2.st.cur && drawC2(c2.st.cur); setSeg($('#seg'), P.sound_model); setSeg($('#seg2'), mode2); setSeg($('#segLang'), LANG); } }, 60); });
 
 let BASE = null;
 $('#base').onclick = () => {
-  if (BASE && JSON.stringify(BASE.params) === JSON.stringify(R.params)) { BASE = null; toast('База сброшена'); }
-  else { BASE = JSON.parse(JSON.stringify(R)); toast('Текущий вариант запомнен как база — меняйте параметры и сравнивайте'); }
+  if (BASE && JSON.stringify(BASE.params) === JSON.stringify(R.params)) { BASE = null; toast(_t('toast_base_off')); }
+  else { BASE = JSON.parse(JSON.stringify(R)); toast(_t('toast_base_on')); }
   $('#base').classList.toggle('primary', !!BASE); render(R);
 };
-$('#save').onclick = async () => { const p = await api('save_config', {...P}); if (p) toast('Конфигурация сохранена: ' + p); };
-$('#open').onclick = async () => { const c = await api('open_config'); if (c){ applyParams(c); toast('Конфигурация загружена'); } };
-$('#reset').onclick = async () => { const d = await api('defaults'); applyParams(d); toast('Параметры сброшены к стоку 21124'); };
-$('#export').onclick = async () => { const p = await api('export_report', {...P}); if (p) toast('Отчёт сохранён: ' + p); else if (DEV) toast('DEV: отчёт выведен в консоль сервера'); };
+$('#save').onclick = async () => { const p = await api('save_config', {...P}); if (p) toast(_t('toast_saved') + p); };
+$('#open').onclick = async () => { const c = await api('open_config'); if (c){ applyParams({...c, lang: LANG}); toast(_t('toast_loaded')); } };
+$('#reset').onclick = async () => { const d = await api('defaults'); applyParams({...d, lang: LANG}); toast(_t('toast_reset')); };
+$('#export').onclick = async () => { const p = await api('export_report', {...P}); if (p) toast(_t('toast_report') + p); else if (DEV) toast(_t('toast_dev')); };
+
+/* ---------- переключение языка ---------- */
+function setLang(lang){
+  LANG = lang === 'en' ? 'en' : 'ru';
+  P.lang = LANG;
+  applyI18n(); buildFields(); legend();
+  for (const k in inputs) if (P[k] != null) inputs[k].set(P[k]);
+  setSeg($('#segLang'), LANG); setSeg($('#seg'), P.sound_model || 'empirical'); setSeg($('#seg2'), mode2);
+  lastNotes = ''; $('#pick').innerHTML = '';
+  api('set_title', _t('title')).catch(() => {});
+  schedule();
+}
+$('#segLang').onclick = e => { const b = e.target.closest('button'); if (b && b.dataset.v !== LANG) setLang(b.dataset.v); };
 
 /* ---------- старт ---------- */
 (async () => {
-  buildFields(); legend();
-  if (new URLSearchParams(location.search).has('shot')) $('#splash').remove();
+  const q = new URLSearchParams(location.search);
+  if (q.has('shot')) $('#splash').remove();
   api('version').then(v => $('#ver').textContent = 'v' + v).catch(() => {});
   const d = await api('defaults'); const s = await api('load_settings');
-  applyParams({...d, ...(s || {})});
-  setSeg($('#seg2'), mode2);
-  setTimeout(() => { const sp = $('#splash'); if (sp) sp.classList.add('gone'); setSeg($('#seg'), P.sound_model); setSeg($('#seg2'), mode2); }, REDUCED ? 0 : 1700);
+  LANG = q.get('lang') || (s && s.lang) || ((navigator.language || 'ru').startsWith('ru') ? 'ru' : 'en');
+  if (LANG !== 'en') LANG = 'ru';
+  P.lang = LANG;
+  applyI18n(); buildFields(); legend();
+  applyParams({...d, ...(s || {}), lang: LANG});
+  setSeg($('#seg2'), mode2); setSeg($('#segLang'), LANG);
+  api('set_title', _t('title')).catch(() => {});
+  setTimeout(() => { const sp = $('#splash'); if (sp) sp.classList.add('gone'); setSeg($('#seg'), P.sound_model); setSeg($('#seg2'), mode2); setSeg($('#segLang'), LANG); }, REDUCED ? 0 : 1700);
 })();
 </script>
 </body>

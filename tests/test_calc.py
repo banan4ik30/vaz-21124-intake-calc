@@ -145,3 +145,34 @@ def test_cli_json(tmp_path):
     data = json.loads(out)
     assert data["params"]["runner_len_mm"] == 450
     assert data["params"]["plenum_l"] == 2.0
+
+
+# --- языки --------------------------------------------------------------------------
+def test_default_language_is_russian():
+    r = calc.compute()
+    assert r["lang"] == "ru"
+    assert "гармоника" in r["notes"][0]["text"]
+
+
+def test_english_notes_and_report():
+    r = calc.compute({"lang": "en"})
+    assert r["lang"] == "en"
+    text = " ".join(n["text"] for n in r["notes"])
+    assert "harmonic" in text and not any("а" <= ch <= "я" for ch in text.lower())
+    rep = calc.report(r)
+    assert "INTAKE TRACT CALCULATION" in rep and "Conclusions:" in rep
+
+
+def test_language_does_not_change_numbers():
+    ru, en = calc.compute({"lang": "ru"}), calc.compute({"lang": "en"})
+    assert ru["tuning"] == en["tuning"] and ru["kpi"] == en["kpi"] and ru["plenum_res"] == en["plenum_res"]
+
+
+def test_unknown_language_falls_back_to_russian():
+    assert calc.compute({"lang": "de"})["lang"] == "ru"
+
+
+def test_cli_english():
+    out = subprocess.run([sys.executable, str(ROOT / "calc.py"), "--lang", "en"],
+                         capture_output=True, text=True, encoding="utf-8", check=True).stdout
+    assert "Conclusions:" in out

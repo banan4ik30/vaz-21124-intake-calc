@@ -28,6 +28,8 @@ class Handler(SimpleHTTPRequestHandler):
             out = dict(calc.DEFAULTS)
         elif name == "version":
             out = calc.__version__
+        elif name == "set_title":
+            out = True
         elif name == "load_settings":
             out = STORE.get("s", {})
         elif name == "save_settings":
