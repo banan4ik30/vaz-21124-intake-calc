@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Расчёт впускного коллектора ВАЗ 21124</title>
+<style>
+:root{
+  --bg:#07090f; --bg2:#0c1019;
+  --surface:rgba(255,255,255,.035); --surface2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+  --text:#e9edf5; --muted:#8b93a7; --dim:#5b6376;
+  --acc:#ff7a18; --acc2:#ff3d77; --cyan:#3ee0cf; --violet:#8b7bff; --gold:#ffd166;
+  --ok:#3ee0a0; --warn:#ffb020; --info:#6aa8ff;
+  --k2:#ff3d77;--k3:#ff7a18; --k4:#ffd166; --k5:#3ee0cf; --k6:#8b7bff;
+  --r:18px; --ease:cubic-bezier(.22,1,.36,1);
+  font-family:"Segoe UI Variable Display","Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);overflow:hidden}
+body{font-size:14px;-webkit-font-smoothing:antialiased;user-select:none}
+input{font:inherit;color:inherit}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+
+/* ---------- фон ---------- */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.33;will-change:transform}
+.b1{width:620px;height:620px;background:radial-gradient(circle,#ff6a1a,transparent 65%);left:-160px;top:-200px;animation:drift1 26s ease-in-out infinite}
+.b2{width:560px;height:560px;background:radial-gradient(circle,#ff2d6f,transparent 65%);right:-180px;top:30%;animation:drift2 32s ease-in-out infinite;opacity:.22}
+.b3{width:700px;height:700px;background:radial-gradient(circle,#1fb8c9,transparent 65%);left:30%;bottom:-380px;animation:drift3 38s ease-in-out infinite;opacity:.2}
+@keyframes drift1{50%{transform:translate(180px,120px) scale(1.15)}}
+@keyframes drift2{50%{transform:translate(-160px,-90px) scale(.9)}}
+@keyframes drift3{50%{transform:translate(-200px,-60px) scale(1.1)}}
+.grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at 60% 30%,#000 10%,transparent 70%);opacity:.35}
+
+/* ---------- заставка ---------- */
+#splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--bg);transition:opacity .7s var(--ease),visibility .7s}
+#splash.gone{opacity:0;visibility:hidden}
+.splash-in{display:flex;flex-direction:column;align-items:center;gap:22px}
+.splash-in svg path{fill:none;stroke:url(#sg);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:600;stroke-dashoffset:600;animation:draw 1.3s var(--ease) forwards}
+.splash-in svg path:nth-child(2){animation-delay:.12s}.splash-in svg path:nth-child(3){animation-delay:.2s}
+.splash-in svg path:nth-child(4){animation-delay:.28s}.splash-in svg path:nth-child(5){animation-delay:.36s}
+.splash-in svg path:nth-child(6){animation-delay:.44s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.splash-t{font-size:30px;font-weight:700;letter-spacing:.02em;opacity:0;transform:translateY(10px);animation:rise .8s .6s var(--ease) forwards}
+.splash-s{color:var(--muted);opacity:0;animation:rise .8s .8s var(--ease) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* ---------- каркас ---------- */
+.app{position:relative;z-index:1;display:grid;grid-template-columns:352px 1fr;height:100vh}
+aside{border-right:1px solid var(--line);background:linear-gradient(180deg,rgba(12,16,25,.85),rgba(7,9,15,.7));backdrop-filter:blur(20px);display:flex;flex-direction:column;min-height:0}
+.brand{display:flex;align-items:center;gap:12px;padding:22px 22px 16px}
+.logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 8px 30px -8px var(--acc2);position:relative;overflow:hidden}
+.logo::after{content:"";position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent 0 70%,rgba(255,255,255,.55) 80%,transparent 90%);animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.logo svg{position:relative;z-index:1}
+.brand h1{font-size:18px;font-weight:700;letter-spacing:.01em}
+.brand p{font-size:12px;color:var(--muted);margin-top:2px}
+.side-scroll{overflow-y:auto;padding:4px 14px 20px;flex:1}
+.side-scroll::-webkit-scrollbar{width:8px}.side-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+
+.group{margin:10px 0 4px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden;opacity:0;transform:translateX(-14px);animation:slideIn .7s var(--ease) forwards}
+.group-h{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer}
+.group-h span{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.group-h i{width:8px;height:8px;border-right:2px solid var(--dim);border-bottom:2px solid var(--dim);transform:rotate(45deg);transition:transform .35s var(--ease)}
+.group.closed .group-h i{transform:rotate(-45deg)}
+.group-b{display:grid;grid-template-rows:1fr;transition:grid-template-rows .45s var(--ease)}
+.group.closed .group-b{grid-template-rows:0fr}
+.group-b>div{overflow:hidden;padding:0 14px}
+.group-b>div>:last-child{margin-bottom:14px}
+@keyframes slideIn{to{opacity:1;transform:none}}
+
+.field{margin-top:12px}
+.field-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.field label{font-size:13px;color:var(--text)}
+.field small{display:block;font-size:11px;color:var(--dim);margin-top:2px}
+.num{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;padding:3px 8px;transition:border-color .2s,box-shadow .2s}
+.num:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,122,24,.18)}
+.num input{width:60px;background:none;border:0;outline:0;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.num em{font-style:normal;font-size:11px;color:var(--muted)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:none;margin-top:6px;cursor:pointer;--p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,var(--acc),var(--acc2)) 0/var(--p) 100% no-repeat,rgba(255,255,255,.08)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-6px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,122,24,.25),0 4px 12px rgba(0,0,0,.5);transition:transform .2s var(--ease),box-shadow .2s}
+input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.2);box-shadow:0 0 0 6px rgba(255,122,24,.25),0 0 20px rgba(255,122,24,.6)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.35)}
+.chip{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 10px;border-radius:999px;background:var(--surface2);border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.chip b{color:var(--text);font-variant-numeric:tabular-nums}
+
+/* ---------- основная часть ---------- */
+main{overflow-y:auto;padding:22px 28px 28px;min-height:0}
+main::-webkit-scrollbar{width:10px}main::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.top h2{font-size:24px;font-weight:700;letter-spacing:-.01em}
+.top h2 span{background:linear-gradient(90deg,var(--acc),var(--acc2),var(--violet),var(--acc));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 8s linear infinite}
+@keyframes flow{to{background-position:300% 0}}
+.top p{color:var(--muted);font-size:13px;margin-top:4px}
+.actions{display:flex;align-items:center;gap:10px}
+
+.seg{position:relative;display:flex;padding:4px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.seg button{position:relative;z-index:1;white-space:nowrap;padding:7px 12px;font-size:12.5px;color:var(--muted);transition:color .3s}
+.seg button.on{color:#fff}
+.seg .pill{position:absolute;top:4px;bottom:4px;border-radius:9px;background:linear-gradient(135deg,rgba(255,122,24,.9),rgba(255,61,119,.9));box-shadow:0 6px 20px -6px var(--acc2);transition:left .45s var(--ease),width .45s var(--ease)}
+.btn{position:relative;overflow:hidden;display:inline-flex;white-space:nowrap;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;border:1px solid var(--line2);background:var(--surface);font-size:13px;font-weight:600;transition:transform .2s var(--ease),background .2s,border-color .2s}
+.btn:hover{background:var(--surface2);border-color:rgba(255,255,255,.22);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn.primary{border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 10px 26px -10px var(--acc2)}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);background:rgba(255,255,255,.35);animation:rip .6s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+
+.card{position:relative;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);backdrop-filter:blur(14px);overflow:hidden;opacity:0;transform:translateY(16px);animation:rise .8s var(--ease) forwards}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,-999px) var(--my,-999px),rgba(255,255,255,.06),transparent 45%);pointer-events:none;transition:opacity .3s}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 0}
+.card-h h3{font-size:14px;font-weight:650}
+.card-h p{font-size:12px;color:var(--muted);margin-top:2px}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.kpi{padding:16px 18px}
+.kpi .lbl{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px currentColor;color:var(--ok);transition:background .4s,color .4s}
+.dot.warn{background:var(--warn);color:var(--warn)}.dot.info{background:var(--info);color:var(--info)}
+.kpi .val{margin-top:10px;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .val em{font-style:normal;font-size:14px;font-weight:500;color:var(--muted);margin-left:4px}
+.kpi .sub{margin-top:4px;font-size:12px;color:var(--muted);min-height:16px}
+.kpi .bar{position:absolute;left:0;bottom:0;height:2px;width:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));transform-origin:left;transform:scaleX(var(--f,0));transition:transform .9s var(--ease)}
+
+.row{display:grid;gap:14px;margin-bottom:14px}
+.row.two{grid-template-columns:1.25fr 1fr}
+.chart-wrap{position:relative;padding:6px 10px 10px}
+.chart{width:100%;display:block}
+#c1{height:360px;cursor:ew-resize}
+#c2{height:260px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;padding:12px 18px 0;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:3px;border-radius:3px}
+.tip{position:absolute;pointer-events:none;padding:10px 12px;border-radius:12px;background:rgba(10,13,20,.92);border:1px solid var(--line2);box-shadow:0 12px 40px rgba(0,0,0,.5);font-size:12px;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s var(--ease);min-width:150px;z-index:3}
+.tip.on{opacity:1;transform:none}
+.tip b{display:block;margin-bottom:6px;font-size:12.5px}
+.tip div{display:flex;justify-content:space-between;gap:14px;font-variant-numeric:tabular-nums}
+.hint{font-size:11.5px;color:var(--dim);display:flex;align-items:center;gap:6px}
+.hint kbd{font:inherit;padding:1px 6px;border:1px solid var(--line2);border-radius:6px;color:var(--muted)}
+
+svg text{font-family:inherit;font-size:11px;fill:var(--dim)}
+.axis line{stroke:var(--line)}
+.marker-lbl{font-weight:700;font-size:11.5px}
+
+/* подбор */
+.pick{padding:14px 18px 18px}
+.pick-row{display:grid;grid-template-columns:62px 1fr 92px;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.pick-row:last-child{border-bottom:0}
+.pick-k{font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.pick-k i{width:8px;height:8px;border-radius:2px}
+.track{position:relative;height:10px;border-radius:10px;background:rgba(255,255,255,.05);overflow:hidden}
+.track .zone{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,rgba(62,224,160,.22) 0 6px,rgba(62,224,160,.1) 6px 12px);transition:left .7s var(--ease),width .7s var(--ease)}
+.track .fill{position:absolute;left:0;top:2px;bottom:2px;border-radius:10px;transition:width .8s var(--ease);box-shadow:0 0 16px currentColor}
+.pick-v{text-align:right;font-variant-numeric:tabular-nums}
+.pick-v b{font-size:15px;white-space:nowrap}
+#sweep .pick-row{grid-template-columns:62px 1fr 118px}
+.pick-v small{display:block;font-size:11px;color:var(--dim)}
+.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 6px;border-radius:6px;margin-left:6px;vertical-align:middle;transition:all .3s}
+.badge.yes{background:rgba(62,224,160,.15);color:var(--ok)}
+.badge.no{background:rgba(255,255,255,.05);color:var(--dim)}
+
+/* выводы */
+.notes{padding:10px 18px 18px;display:flex;flex-direction:column;gap:8px}
+.note{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.025);border:1px solid var(--line);font-size:13px;line-height:1.45;animation:noteIn .6s var(--ease) both}
+.note i{flex:none;width:4px;align-self:stretch;border-radius:4px;background:var(--ok)}
+.note.warn i{background:var(--warn)}.note.info i{background:var(--info)}
+@keyframes noteIn{from{opacity:0;transform:translateX(18px)}}
+
+.tech{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px 18px}
+.disclaimer{margin-top:4px;padding:14px 18px;border-radius:14px;border:1px solid rgba(255,176,32,.25);background:rgba(255,176,32,.06);color:#e8cf9c;font-size:12.5px;line-height:1.5;display:flex;gap:12px;align-items:flex-start}
+
+.toast{position:fixed;left:50%;bottom:26px;z-index:40;transform:translate(-50%,30px);opacity:0;padding:12px 18px;border-radius:14px;background:rgba(14,18,28,.95);border:1px solid var(--line2);box-shadow:0 20px 50px rgba(0,0,0,.5);font-size:13px;transition:all .45s var(--ease)}
+.toast.on{transform:translate(-50%,0);opacity:1}
+
+@media (max-width:1250px){.kpis{grid-template-columns:repeat(2,1fr)}.row.two{grid-template-columns:1fr}}
+.shot .card,.shot .group,.shot .note{animation:none!important;opacity:1!important;transform:none!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bg"><div class="grid"></div><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<div id="splash">
+  <div class="splash-in">
+    <svg width="220" height="120" viewBox="0 0 220 120">
+      <defs><linearGradient id="sg" x1="0" x2="1"><stop offset="0" stop-color="#ff7a18"/><stop offset="1" stop-color="#ff3d77"/></linearGradient></defs>
+      <path d="M20 30 H200 Q210 30 210 40 V52 Q210 62 200 62 H20 Q10 62 10 52 V40 Q10 30 20 30Z"/>
+      <path d="M45 62 C45 85 40 95 40 112"/>
+      <path d="M85 62 C85 85 82 95 82 112"/>
+      <path d="M135 62 C135 85 138 95 138 112"/>
+      <path d="M175 62 C175 85 180 95 180 112"/>
+      <path d="M110 30 V8 M96 8 H124"/>
+    </svg>
+    <div class="splash-t">Расчёт впускного коллектора</div>
+    <div class="splash-s">на основе мотора ВАЗ 21124 1.6 16V</div>
+  </div>
+</div>
+
+<div class="app">
+  <aside>
+    <div class="brand">
+      <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="6" rx="2"/><path d="M6 10v10M10 10v10M14 10v10M18 10v10"/></svg></div>
+      <div><h1>Впускной коллектор</h1><p>расчёт на базе ВАЗ 21124 · <span id="ver"></span></p></div>
+    </div>
+    <div class="side-scroll" id="fields"></div>
+  </aside>
+
+  <main>
+    <div class="top">
+      <div>
+        <h2>Настройка <span>впускного тракта</span></h2>
+        <p>Меняйте параметры слева или тяните маркер на графике — всё пересчитывается мгновенно</p>
+      </div>
+      <div class="actions">
+        <div class="seg" id="seg">
+          <div class="pill"></div>
+          <button data-v="empirical" title="c ≈ 396 м/с — как в классических формулах Vizard / DRIVE2">Эмпирическая</button>
+          <button data-v="physical" title="c из температуры воздуха во впуске">Физическая</button>
+        </div>
+        <button class="btn" id="base" title="Запомнить текущий вариант как базу для сравнения">◎ База</button>
+        <button class="btn" id="open" title="Открыть конфигурацию (.json)">📂</button>
+        <button class="btn" id="save" title="Сохранить конфигурацию (.json)">💾</button>
+        <button class="btn" id="reset">↺ Сток 21124</button>
+        <button class="btn primary" id="export">⤓ Отчёт</button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="card kpi" style="animation-delay:.05s"><div class="lbl"><span class="dot" id="d0"></span>Главный пик настройки</div><div class="val" id="k0">—</div><div class="sub" id="s0"></div><div class="bar" id="b0"></div></div>
+      <div class="card kpi" style="animation-delay:.12s"><div class="lbl"><span class="dot" id="d1"></span>Скорость в канале на отсечке</div><div class="val" id="k1">—</div><div class="sub" id="s1"></div><div class="bar" id="b1"></div></div>
+      <div class="card kpi" style="animation-delay:.19s"><div class="lbl"><span class="dot" id="d2"></span>Ресивер / рабочий объём</div><div class="val" id="k2">—</div><div class="sub" id="s2"></div><div class="bar" id="b2"></div></div>
+      <div class="card kpi" style="animation-delay:.26s"><div class="lbl"><span class="dot" id="d3"></span>Расход воздуха на отсечке</div><div class="val" id="k3">—</div><div class="sub" id="s3"></div><div class="bar" id="b3"></div></div>
+    </div>
+
+    <div class="row">
+      <div class="card" style="animation-delay:.3s">
+        <div class="card-h">
+          <div><h3>Длина канала → обороты резонансного пика</h3><p>Длина от седла клапана до входа в ресивер. Полосы — разброс между эмпирической и физической моделью</p></div>
+          <div class="hint"><kbd>тяните</kbd> по графику, чтобы менять длину</div>
+        </div>
+        <div class="legend" id="lg1"></div>
+        <div class="chart-wrap"><svg class="chart" id="c1"></svg><div class="tip" id="tip1"></div></div>
+      </div>
+    </div>
+
+    <div class="row two">
+      <div class="card" style="animation-delay:.38s">
+        <div class="card-h">
+          <div><h3 id="c2t">Скорость в канале по оборотам</h3><p id="c2p">Зелёная зона — рабочие 55–90 м/с</p></div>
+          <div class="seg" id="seg2">
+            <div class="pill"></div>
+            <button data-v="vel">Канал</button><button data-v="flow">Расход</button><button data-v="th_vel">Дроссель</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><svg class="chart" id="c2"></svg><div class="tip" id="tip2"></div></div>
+      </div>
+      <div class="card" style="animation-delay:.44s">
+        <div class="card-h"><div><h3>Подбор длины под <span id="tgt">—</span> об/мин</h3><p>Штриховка — что влезает под капот (компоновка слева)</p></div></div>
+        <div class="pick" id="pick"></div>
+      </div>
+    </div>
+
+    <div class="row two">
+      <div class="card" style="animation-delay:.5s">
+        <div class="card-h"><div><h3>Выводы</h3><p>Автоматический разбор текущей конфигурации</p></div></div>
+        <div class="notes" id="notes"></div>
+      </div>
+      <div class="card" style="animation-delay:.56s">
+        <div class="card-h"><div><h3>Параметры мотора</h3><p>Производные величины</p></div></div>
+        <div class="tech" id="tech"></div>
+        <div class="card-h" style="padding-top:0"><div><h3>Резонанс ресивера от объёма</h3><p>При текущем дросселе и трубе до фильтра · физическая скорость звука</p></div></div>
+        <div class="pick" id="sweep"></div>
+        <div style="padding:0 18px 18px"><div class="disclaimer"><span>⚠</span><div><b>Инженерная оценка, ±10–15 %.</b> Волновая настройка по классической методике (Vizard/Engle). Подходит, чтобы выбрать стартовую длину и объём и сравнивать варианты. Точный ответ дают 1D-моделирование (EngMod4T, GT-Power) и логи Января «до/после».</div></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const DEV = new URLSearchParams(location.search).has('dev');
+const SHOT = new URLSearchParams(location.search).has('shot');
+if (SHOT) document.documentElement.classList.add('shot');
+const REDUCED = SHOT || matchMedia('(prefers-reduced-motion: reduce)').matches;
+const KC = {2:'var(--k2)',3:'var(--k3)',4:'var(--k4)',5:'var(--k5)',6:'var(--k6)'};
+const KH = {2:'#ff3d77',3:'#ff7a18',4:'#ffd166',5:'#3ee0cf',6:'#8b7bff'};
+
+/* ---------- мост к Python ---------- */
+const ready = new Promise(res => {
+  if (DEV) return res();
+  if (window.pywebview && window.pywebview.api) return res();
+  window.addEventListener('pywebviewready', () => res());
+});
+async function api(name, arg){
+  await ready;
+  if (!DEV) return arg === undefined ? window.pywebview.api[name]() : window.pywebview.api[name](arg);
+  const r = await fetch('/api/' + name, {method:'POST', body: JSON.stringify(arg || {})});
+  return r.json();
+}
+
+/* ---------- поля ---------- */
+const GROUPS = [
+  ['Двигатель', [
+    ['bore_mm','Диаметр цилиндра','мм',70,95,.1,'21124: 82 мм'],
+    ['stroke_mm','Ход поршня','мм',60,90,.1,'21124: 75,6 мм'],
+    ['cr','Степень сжатия','',8,13,.1,'21124: ~10,3'],
+  ]],
+  ['Распредвал впуска', [
+    ['ivo_btdc','Открытие впуска','° до ВМТ',0,60,1,'сток 21124: 17°'],
+    ['ivc_abdc','Закрытие впуска','° после НМТ',20,90,1,'сток 21124: 59° — ключевой параметр'],
+  ], 'dur'],
+  ['Впускной тракт', [
+    ['runner_len_mm','Длина канала','мм',200,1000,5,'от седла до входа в ресивер · ~500 по алюминиевому аналогу 2112 · из них голова ~80 (модели)'],
+    ['runner_d_mm','Диаметр канала','мм',28,50,.5,'сток ~34,5: выход пластика 34,3×33,7 (замер), окна ГБЦ 34,8–35'],
+    ['plenum_l','Объём ресивера','л',.5,5,.05,'только камера, без каналов · сток ~1,5 (2,7 л всего − ~1,2 л каналов)'],
+    ['throttle_d_mm','Дроссель','мм',40,70,1,'сток 46 мм'],
+  ]],
+  ['Подвод воздуха (резонанс ресивера)', [
+    ['inlet_len_mm','Труба дроссель → фильтр','мм',0,1000,10,'длина по оси, включая патрубок ДМРВ'],
+    ['inlet_d_mm','Диаметр трубы','мм',40,90,1,'внутренний, средний'],
+  ]],
+  ['Режим', [
+    ['rpm_min','Нижняя граница','об/мин',800,3000,100,''],
+    ['rpm_limit','Отсечка','об/мин',4500,8500,100,''],
+    ['target_rpm','Целевой пик','об/мин',1500,8000,50,'под эти обороты подбирается длина'],
+    ['ve','Наполнение (VE)','',.6,1.1,.01,'для расчёта расхода; сток ~0,85–0,9'],
+    ['air_temp_c','Температура во впуске','°C',-20,80,1,'влияет на физическую модель'],
+  ]],
+  ['Компоновка под капотом', [
+    ['pack_min_mm','Мин. длина канала','мм',150,600,10,''],
+    ['pack_max_mm','Макс. длина канала','мм',300,1000,10,'сколько реально уложить'],
+  ]],
+];
+let P = {}; const inputs = {};
+
+function buildFields(){
+  const root = $('#fields'); let gi = 0;
+  for (const [title, list, extra] of GROUPS){
+    const g = document.createElement('div'); g.className = 'group'; g.style.animationDelay = (0.15 + gi++ * 0.07) + 's';
+    g.innerHTML = `<div class="group-h"><span>${title}</span><i></i></div><div class="group-b"><div></div></div>`;
+    g.querySelector('.group-h').onclick = () => g.classList.toggle('closed');
+    const body = g.querySelector('.group-b>div');
+    for (const [key,label,unit,min,max,step,help] of list){
+      const f = document.createElement('div'); f.className = 'field';
+      f.innerHTML = `<div class="field-top"><label>${label}</label><div class="num"><input type="number" min="${min}" max="${max}" step="${step}"><em>${unit}</em></div></div>
+        <input type="range" min="${min}" max="${max}" step="${step}">${help ? `<small>${help}</small>` : ''}`;
+      const n = f.querySelector('input[type=number]'), r = f.querySelector('input[type=range]');
+      const set = (v, from) => {
+        v = Math.min(max, Math.max(min, +v)); if (isNaN(v)) return;
+        P[key] = v; if (from !== n) n.value = +v.toFixed(3); if (from !== r) r.value = v;
+        r.style.setProperty('--p', ((v - min) / (max - min) * 100) + '%');
+        schedule();
+      };
+      r.oninput = () => set(r.value, r);
+      n.onchange = () => set(n.value, n);
+      n.onkeydown = e => { if (e.key === 'Enter') n.blur(); };
+      inputs[key] = {set, n, r, min, max};
+      body.appendChild(f);
+    }
+    if (extra === 'dur'){ const c = document.createElement('div'); c.className = 'chip'; c.innerHTML = 'Фаза <b id="dur">—</b> · EVCD <b id="evcd">—</b>'; body.appendChild(c); }
+    root.appendChild(g);
+  }
+}
+function applyParams(p){ Object.assign(P, p); for (const k in inputs) if (P[k] != null) inputs[k].set(P[k]); setSeg($('#seg'), P.sound_model || 'empirical'); }
+
+/* ---------- сегмент-переключатели ---------- */
+function setSeg(seg, v){
+  const btns = [...seg.querySelectorAll('button')]; const b = btns.find(x => x.dataset.v === v) || btns[0];
+  btns.forEach(x => x.classList.toggle('on', x === b));
+  const pill = seg.querySelector('.pill'); pill.style.left = b.offsetLeft + 'px'; pill.style.width = b.offsetWidth + 'px';
+}
+$('#seg').onclick = e => { const b = e.target.closest('button'); if (!b) return; P.sound_model = b.dataset.v; setSeg($('#seg'), b.dataset.v); schedule(); };
+let mode2 = 'vel';
+$('#seg2').onclick = e => { const b = e.target.closest('button'); if (!b) return; mode2 = b.dataset.v; setSeg($('#seg2'), mode2); if (R) { c2.from = null; renderC2Target(R, true); } };
+
+/* ---------- пересчёт ---------- */
+let pending = false, busy = false, R = null, saveT;
+function schedule(){ pending = true; if (!busy) run(); clearTimeout(saveT); saveT = setTimeout(() => api('save_settings', P), 500); }
+async function run(){
+  busy = true;
+  while (pending){ pending = false; try { R = await api('compute', {...P}); render(R); } catch(e){ console.error(e); } }
+  busy = false;
+}
+
+/* ---------- анимация чисел ---------- */
+const counters = {};
+function countTo(el, v, dec = 0, suffix = ''){
+  const key = el.id, from = counters[key] ?? v * .6; counters[key] = v;
+  if (REDUCED){ el.innerHTML = fmt(v, dec) + suffix; return; }
+  const t0 = performance.now(), D = 650;
+  cancelAnimationFrame(el._raf);
+  const step = t => { const k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3);
+    el.innerHTML = fmt(from + (v - from) * e, dec) + suffix; if (k < 1) el._raf = requestAnimationFrame(step); };
+  el._raf = requestAnimationFrame(step);
+}
+const fmt = (v, d = 0) => Number(v).toLocaleString('ru-RU', {minimumFractionDigits:d, maximumFractionDigits:d});
+
+/* ---------- твин структур ---------- */
+function lerpDeep(a, b, t){
+  if (typeof b === 'number') return typeof a === 'number' ? a + (b - a) * t : b;
+  if (Array.isArray(b)) return (Array.isArray(a) && a.length === b.length) ? b.map((x, i) => lerpDeep(a[i], x, t)) : b;
+  if (b && typeof b === 'object'){ const o = {}; for (const k in b) o[k] = lerpDeep(a ? a[k] : undefined, b[k], t); return o; }
+  return b;
+}
+function tween(st, target, draw, dur = 520){
+  const from = st.cur || target; st.target = target;
+  cancelAnimationFrame(st.raf);
+  if (REDUCED || !st.cur){ st.cur = target; draw(target); return; }
+  const t0 = performance.now();
+  const step = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+    st.cur = lerpDeep(from, target, e); draw(st.cur); if (k < 1) st.raf = requestAnimationFrame(step); };
+  st.raf = requestAnimationFrame(step);
+}
+
+/* ---------- SVG-утилиты ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
+function size(svg){ const r = svg.getBoundingClientRect(); svg.setAttribute('viewBox', `0 0 ${r.width} ${r.height}`); return [r.width, r.height]; }
+function path(xs, ys){ let d = ''; for (let i = 0; i < xs.length; i++) d += (i ? 'L' : 'M') + xs[i].toFixed(1) + ',' + ys[i].toFixed(1); return d; }
+function smooth(pts){ if (pts.length < 3) return 'M' + pts.map(p => p.join(',')).join('L');
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++){ const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += `C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`; }
+  return d; }
+function niceMax(v){ const p = Math.pow(10, Math.floor(Math.log10(v))); const n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
+
+/* ---------- график 1: длина → обороты ---------- */
+const c1 = {st:{}, M:{l:52,r:18,t:14,b:34}, X:[200,1000], Y:[1000,9000]};
+function c1Target(R){
+  const p = R.params;
+  return {
+    curves: R.chart_len.curves.map(c => ({pts:c.pts.map(Number), alt:c.alt.map(Number)})),
+    len:+p.runner_len_mm, pr:+R.plenum_res.rpm, rmin:+p.rpm_min, rlim:+p.rpm_limit, tgt:+p.target_rpm, pmin:+p.pack_min_mm, pmax:+p.pack_max_mm,
+  };
+}
+function drawC1(D){
+  const svg = $('#c1'); const [W, H] = size(svg); const {l, r, t, b} = c1.M;
+  const iw = W - l - r, ih = H - t - b; if (iw < 40 || ih < 40) return;
+  const sx = v => l + (v - c1.X[0]) / (c1.X[1] - c1.X[0]) * iw;
+  const sy = v => t + ih - (v - c1.Y[0]) / (c1.Y[1] - c1.Y[0]) * ih;
+  const lens = R.chart_len.lengths;
+  svg.innerHTML = '';
+  const defs = el('defs', {}, svg);
+  el('rect', {x:l, y:t, width:iw, height:ih}, el('clipPath', {id:'cl1'}, defs));
+  const glow = el('filter', {id:'glow', x:'-50%', y:'-50%', width:'200%', height:'200%'}, defs);
+  el('feGaussianBlur', {stdDeviation:4, result:'b'}, glow);
+  const m = el('feMerge', {}, glow); el('feMergeNode', {in:'b'}, m); el('feMergeNode', {in:'SourceGraphic'}, m);
+
+  // сетка и оси
+  const ax = el('g', {class:'axis'}, svg);
+  for (let y = 1000; y <= 9000; y += 1000){ el('line', {x1:l, x2:l + iw, y1:sy(y), y2:sy(y)}, ax); const tx = el('text', {x:l - 8, y:sy(y) + 4, 'text-anchor':'end'}, ax); tx.textContent = y / 1000 + 'k'; }
+  for (let x = 200; x <= 1000; x += 100){ el('line', {x1:sx(x), x2:sx(x), y1:t, y2:t + ih, opacity:.5}, ax); const tx = el('text', {x:sx(x), y:t + ih + 20, 'text-anchor':'middle'}, ax); tx.textContent = x; }
+  const ux = el('text', {x:l + iw, y:H - 2, 'text-anchor':'end'}, ax); ux.textContent = 'мм';
+
+  const g = el('g', {'clip-path':'url(#cl1)'}, svg);
+  // зона рабочих оборотов
+  el('rect', {x:l, width:iw, y:sy(D.rlim), height:Math.max(0, sy(D.rmin) - sy(D.rlim)), fill:'rgba(62,224,207,.06)'}, g);
+  // зона компоновки
+  el('rect', {x:sx(D.pmin), width:Math.max(0, sx(D.pmax) - sx(D.pmin)), y:t, height:ih, fill:'rgba(62,224,160,.05)', stroke:'rgba(62,224,160,.25)', 'stroke-dasharray':'4 6'}, g);
+  // целевые обороты
+  el('line', {x1:l, x2:l + iw, y1:sy(D.tgt), y2:sy(D.tgt), stroke:'rgba(255,255,255,.35)', 'stroke-dasharray':'6 6'}, g);
+  const tl = el('text', {x:l + iw - 6, y:sy(D.tgt) - 6, 'text-anchor':'end', fill:'rgba(255,255,255,.6)'}, g); tl.textContent = 'цель ' + Math.round(D.tgt);
+  // резонанс ресивера
+  el('line', {x1:l, x2:l + iw, y1:sy(D.pr), y2:sy(D.pr), stroke:'#6aa8ff', 'stroke-width':1.5, 'stroke-dasharray':'2 5', opacity:.9}, g);
+  const pl = el('text', {x:l + 8, y:sy(D.pr) - 6, style:'fill:#6aa8ff'}, g); pl.textContent = 'резонанс ресивера ' + Math.round(D.pr);
+
+  D.curves.forEach((c, i) => {
+    const k = R.chart_len.curves[i].k, col = KH[k];
+    const xs = lens.map(sx), ys = c.pts.map(sy), ya = c.alt.map(sy);
+    const band = path(xs, ys) + 'L' + path(xs.slice().reverse(), ya.slice().reverse()).slice(1) + 'Z';
+    el('path', {d:band, fill:col, opacity:.09}, g);
+    el('path', {d:path(xs, ya), fill:'none', stroke:col, 'stroke-width':1, 'stroke-dasharray':'3 5', opacity:.55}, g);
+    el('path', {d:path(xs, ys), fill:'none', stroke:col, 'stroke-width':2.4, filter:'url(#glow)', opacity: k === (R.main && R.main.k) ? 1 : .8}, g);
+  });
+
+  // базовый вариант
+  if (BASE){
+    const bx = sx(+BASE.params.runner_len_mm);
+    el('line', {x1:bx, x2:bx, y1:t, y2:t + ih, stroke:'rgba(255,255,255,.45)', 'stroke-width':1.5, 'stroke-dasharray':'5 5'}, svg);
+    const bt = el('text', {x:bx - 6, y:t + ih - 6, 'text-anchor':'end', style:'fill:rgba(255,255,255,.6)'}, svg); bt.textContent = 'база ' + BASE.params.runner_len_mm;
+  }
+  // маркер длины
+  const mx = sx(D.len);
+  el('line', {x1:mx, x2:mx, y1:t, y2:t + ih, stroke:'#fff', 'stroke-width':1.5, opacity:.85}, svg);
+  const lab = el('g', {}, svg);
+  el('rect', {x:mx - 34, y:t + 2, width:68, height:22, rx:8, fill:'#fff'}, lab);
+  const lt = el('text', {x:mx, y:t + 17, 'text-anchor':'middle', class:'marker-lbl', fill:'#07090f', style:'fill:#07090f'}, lab); lt.textContent = Math.round(D.len) + ' мм';
+  const lenM = D.len / 1000, dM = (+R.params.runner_d_mm) / 1000;
+  R.chart_len.curves.forEach(c => {
+    const rpm = R.engine.c * R.engine.evcd / (24 * c.k * (lenM + dM / 2));
+    if (rpm < c1.Y[0] || rpm > c1.Y[1]) return;
+    const y = sy(rpm);
+    el('circle', {cx:mx, cy:y, r:9, fill:KH[c.k], opacity:.22}, svg);
+    el('circle', {cx:mx, cy:y, r:4.5, fill:KH[c.k], stroke:'#07090f', 'stroke-width':2}, svg);
+    const tx = el('text', {x:mx + 10, y:y - 8, class:'marker-lbl', style:`fill:${KH[c.k]}`}, svg); tx.textContent = Math.round(rpm);
+  });
+  c1.geom = {sx, l, iw, t, ih, W};
+}
+function renderC1(R){ tween(c1.st, c1Target(R), drawC1); }
+
+// ховер и перетаскивание
+(function(){
+  const svg = $('#c1'), tip = $('#tip1'); let drag = false;
+  const lenAt = e => { const g = c1.geom; if (!g) return null; const x = e.clientX - svg.getBoundingClientRect().left;
+    return Math.min(1000, Math.max(200, c1.X[0] + (x - g.l) / g.iw * (c1.X[1] - c1.X[0]))); };
+  const setLen = e => { const v = lenAt(e); if (v == null) return; inputs.runner_len_mm.set(Math.round(v / 5) * 5); };
+  svg.addEventListener('pointerdown', e => { drag = true; svg.setPointerCapture(e.pointerId); setLen(e); });
+  svg.addEventListener('pointerup', () => drag = false);
+  svg.addEventListener('pointermove', e => {
+    if (drag) setLen(e);
+    if (!R) return; const v = lenAt(e); if (v == null) return;
+    const dM = (+R.params.runner_d_mm) / 1000;
+    const rows = R.chart_len.curves.map(c => `<div><span style="color:${KH[c.k]}">${c.k}-я гармоника</span><span>${fmt(R.engine.c * R.engine.evcd / (24 * c.k * (v / 1000 + dM / 2)))}</span></div>`).join('');
+    tip.innerHTML = `<b>${Math.round(v)} мм</b>${rows}`;
+    const wr = svg.parentElement.getBoundingClientRect(), x = e.clientX - wr.left, y = e.clientY - wr.top;
+    tip.style.left = Math.min(x + 16, wr.width - 170) + 'px'; tip.style.top = Math.max(8, y - 40) + 'px'; tip.classList.add('on');
+  });
+  svg.addEventListener('pointerleave', () => tip.classList.remove('on'));
+})();
+
+/* ---------- график 2 ---------- */
+const c2 = {st:{}, M:{l:48,r:16,t:16,b:30}};
+const C2META = {
+  vel:{t:'Скорость в канале по оборотам', p:'Зелёная зона — рабочие 55–90 м/с', unit:'м/с', band:[55,90], col:'#ff7a18'},
+  flow:{t:'Расход воздуха по оборотам', p:'Сравнивайте с ДМРВ (кг/ч) в логах Января', unit:'кг/ч', band:null, col:'#3ee0cf'},
+  th_vel:{t:'Средняя скорость в дросселе', p:'До ~75 м/с дроссель не ограничивает', unit:'м/с', band:[0,75], col:'#8b7bff'},
+};
+function renderC2Target(R, fresh){
+  const m = C2META[mode2]; $('#c2t').textContent = m.t; $('#c2p').textContent = m.p;
+  const ys = R.chart_rpm[mode2]; const ymax = niceMax(Math.max(...ys, m.band ? m.band[1] : 0) * 1.1);
+  if (fresh) c2.st.cur = null;
+  tween(c2.st, {ys:ys.map(Number), ymax, band:m.band ? m.band.slice() : [0,0], pr:+R.plenum_res.rpm}, drawC2, 600);
+}
+function drawC2(D){
+  const svg = $('#c2'); const [W, H] = size(svg); const {l, r, t, b} = c2.M, iw = W - l - r, ih = H - t - b; if (iw < 40 || ih < 40) return;
+  const xs = R.chart_rpm.rpm, x0 = xs[0], x1 = xs[xs.length - 1], m = C2META[mode2];
+  const sx = v => l + (v - x0) / (x1 - x0) * iw, sy = v => t + ih - v / D.ymax * ih;
+  svg.innerHTML = '';
+  const defs = el('defs', {}, svg);
+  const lg = el('linearGradient', {id:'ga', x1:0, x2:0, y1:0, y2:1}, defs);
+  el('stop', {offset:0, 'stop-color':m.col, 'stop-opacity':.35}, lg); el('stop', {offset:1, 'stop-color':m.col, 'stop-opacity':0}, lg);
+  const ax = el('g', {class:'axis'}, svg);
+  for (let i = 0; i <= 4; i++){ const v = D.ymax * i / 4; el('line', {x1:l, x2:l + iw, y1:sy(v), y2:sy(v)}, ax); const tx = el('text', {x:l - 8, y:sy(v) + 4, 'text-anchor':'end'}, ax); tx.textContent = Math.round(v); }
+  const stepX = (x1 - x0) > 4000 ? 1000 : 500;
+  for (let v = Math.ceil(x0 / stepX) * stepX; v <= x1; v += stepX){ const tx = el('text', {x:sx(v), y:t + ih + 20, 'text-anchor':'middle'}, ax); tx.textContent = v; }
+  const u = el('text', {x:l, y:t - 2}, ax); u.textContent = m.unit;
+  if (m.band) el('rect', {x:l, width:iw, y:sy(Math.min(D.band[1], D.ymax)), height:Math.max(0, sy(D.band[0]) - sy(Math.min(D.band[1], D.ymax))), fill:'rgba(62,224,160,.07)'}, svg);
+  if (D.pr >= x0 && D.pr <= x1){
+    el('line', {x1:sx(D.pr), x2:sx(D.pr), y1:t, y2:t + ih, stroke:'#6aa8ff', 'stroke-width':1.5, 'stroke-dasharray':'2 5'}, svg);
+    const pt = el('text', {x:sx(D.pr) + 6, y:t + 12, style:'fill:#6aa8ff'}, svg); pt.textContent = 'резонанс ресивера';
+  }
+  if (BASE && BASE.chart_rpm.rpm.length === xs.length && BASE.chart_rpm.rpm[0] === x0){
+    const bp = xs.map((x, i) => [sx(x), sy(BASE.chart_rpm[mode2][i])]);
+    el('path', {d:smooth(bp), fill:'none', stroke:'rgba(255,255,255,.5)', 'stroke-width':1.5, 'stroke-dasharray':'5 5'}, svg);
+  }
+  const pts = xs.map((x, i) => [sx(x), sy(D.ys[i])]);
+  const line = smooth(pts);
+  el('path', {d:line + `L${sx(x1)},${t + ih}L${sx(x0)},${t + ih}Z`, fill:'url(#ga)'}, svg);
+  el('path', {d:line, fill:'none', stroke:m.col, 'stroke-width':2.5, filter:'url(#glow2)'}, svg);
+  const f = el('filter', {id:'glow2', x:'-50%', y:'-50%', width:'200%', height:'200%'}, defs);
+  el('feGaussianBlur', {stdDeviation:3.5, result:'b'}, f); const mg = el('feMerge', {}, f); el('feMergeNode', {in:'b'}, mg); el('feMergeNode', {in:'SourceGraphic'}, mg);
+  const last = pts[pts.length - 1];
+  el('circle', {cx:last[0], cy:last[1], r:10, fill:m.col, opacity:.2, class:'pulse'}, svg);
+  el('circle', {cx:last[0], cy:last[1], r:4.5, fill:m.col, stroke:'#07090f', 'stroke-width':2}, svg);
+  c2.geom = {sx, sy, l, iw, x0, x1, pts};
+}
+(function(){
+  const svg = $('#c2'), tip = $('#tip2');
+  svg.addEventListener('pointermove', e => {
+    const g = c2.geom; if (!g || !R) return;
+    const x = e.clientX - svg.getBoundingClientRect().left;
+    const rpm = g.x0 + (x - g.l) / g.iw * (g.x1 - g.x0); const xs = R.chart_rpm.rpm;
+    let i = xs.findIndex(v => v >= rpm); if (i < 0) i = xs.length - 1;
+    tip.innerHTML = `<b>${xs[i]} об/мин</b><div><span>${C2META[mode2].t.split(' ')[0]}</span><span>${fmt(R.chart_rpm[mode2][i], 1)} ${C2META[mode2].unit}</span></div>`;
+    const wr = svg.parentElement.getBoundingClientRect();
+    tip.style.left = Math.min(e.clientX - wr.left + 16, wr.width - 170) + 'px'; tip.style.top = (e.clientY - wr.top - 40) + 'px'; tip.classList.add('on');
+  });
+  svg.addEventListener('pointerleave', () => tip.classList.remove('on'));
+})();
+
+/* ---------- подбор длины ---------- */
+function renderPick(R){
+  $('#tgt').textContent = fmt(R.params.target_rpm);
+  const box = $('#pick');
+  if (!box.children.length){
+    box.innerHTML = R.pick.map(x => `<div class="pick-row" data-k="${x.k}"><div class="pick-k"><i style="background:${KC[x.k]}"></i>${x.k}-я</div>
+      <div class="track"><div class="zone"></div><div class="fill" style="background:${KC[x.k]};color:${KH[x.k]}"></div></div>
+      <div class="pick-v"><b></b><span class="badge"></span><small></small></div></div>`).join('');
+  }
+  const pmin = +R.params.pack_min_mm, pmax = +R.params.pack_max_mm, S = 1000;
+  R.pick.forEach(x => {
+    const row = box.querySelector(`[data-k="${x.k}"]`);
+    row.querySelector('.zone').style.left = (pmin / S * 100) + '%';
+    row.querySelector('.zone').style.width = (Math.max(0, pmax - pmin) / S * 100) + '%';
+    row.querySelector('.fill').style.width = Math.max(0, Math.min(100, x.len_mm / S * 100)) + '%';
+    countTo(row.querySelector('b'), x.len_mm, 0, ' мм');
+    const bd = row.querySelector('.badge'); bd.className = 'badge ' + (x.fits ? 'yes' : 'no'); bd.textContent = x.fits ? 'ВЛЕЗАЕТ' : 'НЕТ';
+    row.querySelector('small').textContent = 'альт. ' + x.len_alt_mm + ' мм' + (x.strength ? ` · импульс ~${x.strength} %` : '');
+  });
+}
+
+/* ---------- KPI, выводы, параметры ---------- */
+function renderKpi(R){
+  const k = R.kpi, main = R.main;
+  const bd = (v, b, d = 0, u = '') => BASE && b != null ? ` · база ${fmt(b, d)}${u}` : '';
+  if (main){ countTo($('#k0'), main.rpm, 0, '<em>об/мин</em>'); $('#s0').textContent = `${main.k}-я гармоника · альт. ${fmt(main.rpm_alt)}` + bd(main.rpm, BASE && BASE.main && BASE.main.rpm); }
+  else { $('#k0').innerHTML = '—'; $('#s0').textContent = 'нет пика в рабочем диапазоне'; }
+  $('#d0').className = 'dot ' + (main ? '' : 'warn');
+  $('#b0').style.setProperty('--f', main ? Math.min(1, main.rpm / R.params.rpm_limit) : 0);
+
+  countTo($('#k1'), k.v_limit, 0, '<em>м/с</em>');
+  $('#s1').textContent = `M = ${fmt(k.mach_limit, 2)} · реком. Ø ${fmt(k.d_rec[0], 1)}–${fmt(k.d_rec[1], 1)}` + bd(k.v_limit, BASE && BASE.kpi.v_limit);
+  $('#d1').className = 'dot ' + (k.v_limit < 55 || k.v_limit > 90 ? 'warn' : '');
+  $('#b1').style.setProperty('--f', Math.min(1, k.v_limit / 100));
+
+  countTo($('#k2'), k.plenum_ratio, 2, '<em>×</em>');
+  $('#s2').textContent = `${fmt(R.params.plenum_l, 2)} л · резонанс ~${fmt(R.plenum_res.rpm)}` + bd(0, BASE && BASE.plenum_res.rpm);
+  $('#d2').className = 'dot ' + (k.plenum_ratio < .7 || k.plenum_ratio > 1.8 ? 'warn' : k.plenum_ratio > 1.2 ? 'info' : '');
+  $('#b2').style.setProperty('--f', Math.min(1, k.plenum_ratio / 2.5));
+
+  countTo($('#k3'), k.flow_limit, 0, '<em>кг/ч</em>');
+  $('#s3').textContent = `дроссель: ${fmt(k.th_v_limit)} м/с`;
+  $('#d3').className = 'dot ' + (k.th_v_limit > 75 ? 'warn' : '');
+  $('#b3').style.setProperty('--f', Math.min(1, k.flow_limit / 400));
+}
+let lastNotes = '';
+function renderNotes(R){
+  const key = JSON.stringify(R.notes); if (key === lastNotes) return; lastNotes = key;
+  $('#notes').innerHTML = R.notes.map((n, i) => `<div class="note ${n.level}" style="animation-delay:${i * .06}s"><i></i><div>${n.text}</div></div>`).join('');
+}
+function renderTech(R){
+  const e = R.engine;
+  const items = [['Рабочий объём', fmt(e.displacement_l, 3) + ' л'], ['Цилиндр', fmt(e.cyl_cc, 1) + ' см³'], ['Фаза впуска', e.duration + '°'], ['EVCD', e.evcd + '°'],
+    ['Скорость звука (расчёт)', fmt(e.c, 1) + ' м/с'], ['Физическая', fmt(e.c_phys, 1) + ' м/с'], ['Плотность воздуха', fmt(e.rho, 3) + ' кг/м³'], ['Сечение канала', fmt(R.kpi.runner_area_cm2, 2) + ' см²'], ['Мах в канале', fmt(R.kpi.mach_limit, 2)],
+    ['+10 мм длины', R.sensitivity_rpm_per_10mm != null ? fmt(R.sensitivity_rpm_per_10mm) + ' об/мин' : '—']];
+  $('#tech').innerHTML = items.map(([a, b]) => `<span class="chip">${a} <b>${b}</b></span>`).join('');
+  $('#dur').textContent = e.duration + '°'; $('#evcd').textContent = e.evcd + '°';
+}
+function legend(){
+  const st = {2:'~10 %', 3:'~7 %', 4:'~4 %', 5:'<4 %', 6:'<4 %'};
+  $('#lg1').innerHTML = [2,3,4,5,6].map(k => `<span><i style="background:${KC[k]}"></i>${k}-я · ${st[k]}</span>`).join('')
+    + `<span><i style="background:rgba(62,224,207,.4)"></i>рабочие обороты</span><span><i style="background:rgba(62,224,160,.4)"></i>влезает под капот</span><span><i style="background:#6aa8ff"></i>резонанс ресивера</span><span><i style="background:rgba(255,255,255,.5)"></i>база</span>`;
+}
+function renderSweep(R){
+  const box = $('#sweep'), sw = R.plenum_res.sweep, rmin = +R.params.rpm_min, rlim = +R.params.rpm_limit, S = 6000;
+  const cur = {plenum_l:+R.params.plenum_l, rpm:R.plenum_res.rpm, cur:true};
+  const rows = [...sw.filter(x => Math.abs(x.plenum_l - cur.plenum_l) > 0.05), cur].sort((a, b) => a.plenum_l - b.plenum_l);
+  if (box.children.length !== rows.length){
+    box.innerHTML = rows.map(() => `<div class="pick-row"><div class="pick-k"><i></i><span></span></div>
+      <div class="track"><div class="zone"></div><div class="fill"></div></div><div class="pick-v"><b></b><small></small></div></div>`).join('');
+  }
+  rows.forEach((x, i) => {
+    const row = box.children[i], col = x.cur ? 'var(--acc)' : '#6aa8ff';
+    row.querySelector('.pick-k i').style.background = col;
+    row.querySelector('.pick-k span').textContent = fmt(x.plenum_l, 1) + ' л';
+    row.querySelector('.zone').style.left = (rmin / S * 100) + '%';
+    row.querySelector('.zone').style.width = (Math.max(0, rlim - rmin) / S * 100) + '%';
+    const fl = row.querySelector('.fill'); fl.style.background = col; fl.style.color = x.cur ? '#ff7a18' : '#6aa8ff';
+    fl.style.width = Math.min(100, x.rpm / S * 100) + '%';
+    row.querySelector('b').textContent = fmt(x.rpm) + ' об/мин';
+    row.querySelector('small').textContent = x.cur ? 'ваш ресивер' : '';
+  });
+}
+function render(R){ renderSweep(R); renderKpi(R); renderC1(R); renderC2Target(R); renderPick(R); renderNotes(R); renderTech(R); }
+
+/* ---------- эффекты ---------- */
+document.addEventListener('pointermove', e => {
+  for (const c of document.querySelectorAll('.card')){ const r = c.getBoundingClientRect();
+    c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px'); }
+});
+document.addEventListener('pointerdown', e => {
+  const b = e.target.closest('.btn'); if (!b) return; const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height);
+  const sp = document.createElement('span'); sp.className = 'ripple'; sp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  b.appendChild(sp); setTimeout(() => sp.remove(), 650);
+});
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 2600); }
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (R){ c1.st.cur && drawC1(c1.st.cur); c2.st.cur && drawC2(c2.st.cur); setSeg($('#seg'), P.sound_model); setSeg($('#seg2'), mode2); } }, 60); });
+
+let BASE = null;
+$('#base').onclick = () => {
+  if (BASE && JSON.stringify(BASE.params) === JSON.stringify(R.params)) { BASE = null; toast('База сброшена'); }
+  else { BASE = JSON.parse(JSON.stringify(R)); toast('Текущий вариант запомнен как база — меняйте параметры и сравнивайте'); }
+  $('#base').classList.toggle('primary', !!BASE); render(R);
+};
+$('#save').onclick = async () => { const p = await api('save_config', {...P}); if (p) toast('Конфигурация сохранена: ' + p); };
+$('#open').onclick = async () => { const c = await api('open_config'); if (c){ applyParams(c); toast('Конфигурация загружена'); } };
+$('#reset').onclick = async () => { const d = await api('defaults'); applyParams(d); toast('Параметры сброшены к стоку 21124'); };
+$('#export').onclick = async () => { const p = await api('export_report', {...P}); if (p) toast('Отчёт сохранён: ' + p); else if (DEV) toast('DEV: отчёт выведен в консоль сервера'); };
+
+/* ---------- старт ---------- */
+(async () => {
+  buildFields(); legend();
+  if (new URLSearchParams(location.search).has('shot')) $('#splash').remove();
+  api('version').then(v => $('#ver').textContent = 'v' + v).catch(() => {});
+  const d = await api('defaults'); const s = await api('load_settings');
+  applyParams({...d, ...(s || {})});
+  setSeg($('#seg2'), mode2);
+  setTimeout(() => { const sp = $('#splash'); if (sp) sp.classList.add('gone'); setSeg($('#seg'), P.sound_model); setSeg($('#seg2'), mode2); }, REDUCED ? 0 : 1700);
+})();
+</script>
+</body>
+</html>
