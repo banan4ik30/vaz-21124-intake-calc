@@ -11,4 +11,5 @@ if (-not (Test-Path icon.ico)) { Run $py @('make_icon.py') }
 Run $py @('-m', 'pytest', '-q')
 Run $py @('-m', 'PyInstaller', '--noconfirm', '--onefile', '--windowed', '--log-level', 'WARN',
           '--name', 'VAZ21124-IntakeCalc', '--icon', 'icon.ico', '--add-data', 'ui;ui', 'app.py')
-Write-Host "Готово: dist\VAZ21124-IntakeCalc.exe"
+Copy-Item dist\VAZ21124-IntakeCalc.exe .\VAZ21124-IntakeCalc.exe -Force   # актуальная сборка рядом с исходниками
+Write-Host "Готово: VAZ21124-IntakeCalc.exe (в папке программы)"
